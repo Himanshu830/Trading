@@ -1,0 +1,14 @@
+.wrapper {
+    margin: 10px 0 20px 30px;
+    padding: .75rem 1.25rem;
+    font-size: 16px;
+    width: 100%;
+}
+
+.form-row {
+    margin-bottom: 15px;
+}
+
+.last-row {
+    margin-bottom: 25px;
+}
