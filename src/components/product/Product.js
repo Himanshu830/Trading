@@ -8,6 +8,9 @@ import { Loader } from '../loader/loader';
 import Modal from '../modal/Modal';
 import { arrayBufferToBase64 } from '../../utility/image';
 
+import { FacebookShareButton, FacebookIcon} from "react-share";
+import { API } from '../../config';
+
 class Product extends Component {
     state = {
         id: '',
@@ -86,6 +89,13 @@ class Product extends Component {
                     <td>{product.subCategoryId.name}</td>
                     <td>{product.minQuantity}</td>
                     <td>{product.unitPrice}</td>
+                    <td>
+                        <FacebookShareButton 
+                            url={`${API}/product/update/${product._id}`}
+                        >
+                            <FacebookIcon size={36} />
+                        </FacebookShareButton>    
+                    </td>
                     <td className="text-center">
                         <Link to={`/product/update/${product._id}`} type="button" className="btn btn-sm btn-outline-primary">Update</Link>
                     </td>
@@ -126,6 +136,7 @@ class Product extends Component {
                                     <th scope="col">Sub-category</th>
                                     <th scope="col">Min Qty.</th>
                                     <th scope="col">Unit Price</th>
+                                    <th scope="col">Share</th>
                                     <th scope="col">Update</th>
                                     <th scope="col">Delete</th>
                                 </tr>
