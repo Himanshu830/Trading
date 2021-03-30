@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import Layout from '../layout/Layout';
 import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
 import { getCompany, updateCompany } from './api';
 import { arrayBufferToBase64 } from '../../utility/image';
 
-const Company = ({ user, token }) => {
-    const [company, setCompany] = useState({
+class Company extends Component {
+    state = {
         name: '',
         companyType: '',
         website: '',
@@ -22,23 +22,24 @@ const Company = ({ user, token }) => {
         loading: false,
         error: '',
         success: ''
-    });
+    }
 
-    const companyTypeList = [
+    user = this.props.user;
+    token = this.props.token;
+
+    companyTypeList = [
         {_id: 1, name: 'Exporter'},
         {_id: 2, name: 'Importer'},
         {_id: 3, name: 'Trader'},
     ];
 
-    const { name, companyType, website, address, facebook, instagram, twitter, linkedIn, bio, image, video, formData } = company;
-
-    useEffect(() => {
-        getCompany(token).then(data => {
+    getUserCompany = () => {
+        getCompany(this.token).then(data => {
             if(data.error) {
-                setCompany({ ...company, error: data.error });
+                this.setState({error: data.error, loading: false});
             } else {
-                setCompany({
-                    ...company,
+                this.setState({
+                    loading: false,
                     name: data.name,
                     companyType: data.companyType,
                     userId: data.userId,
@@ -54,27 +55,39 @@ const Company = ({ user, token }) => {
                     formData: new FormData()
                 })
             }
+        }).catch(error => {
+            console.log(error)
+            this.setState({ error: 'Company not found.', loading: false})
         })
-    }, [])
+    }
 
-    const handleChange = name => event => {
+    componentDidMount() {
+        this.getUserCompany();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.success !== this.state.success) {
+            this.getUserCompany();
+        }
+    }
+
+    handleChange = name => event => {
         const value = name === 'image' ? event.target.files[0] : event.target.value;
-        formData.set(name, value);
-        setCompany({ ...company, [name]: value, error: false });
+        this.state.formData.set(name, value);
+        this.setState({ [name]: value });
     };
 
-    const handleSubmit = async e => {
-        e.preventDefault();
-        setCompany({ ...company, error: '', loading: true });
-        formData.set('userId', user._id);
+    handleSubmit = async event => {
+        event.preventDefault();
+        this.setState({ error: '', loading: true });
 
-        updateCompany( formData, token)
+        this.state.formData.set('userId', this.user._id);
+        updateCompany( this.state.formData, this.token)
         .then(result => {
             if (result.error) {
-                setCompany({...company, loading: false, error: result.error });
+                this.setState({loading: false, error: result.error });
             } else {
-                setCompany({
-                    ...result,
+                this.setState({
                     loading: false,
                     success: 'Company updated successfully.'
                 });
@@ -82,12 +95,25 @@ const Company = ({ user, token }) => {
         });
     };
 
-    const showLoader = () => ( company.loading && <Loader /> )
-    const showError = () => ( company.error && <ErrorMessage message={ company.error} /> );
-    const showSuccess = () => ( company.success && <SuccessMessage message={company.success} /> );
+    showLoader = () => ( this.state.loading && <Loader /> )
+    showError = () => ( this.state.error && <ErrorMessage message={ this.state.error} /> );
+    showSuccess = () => ( this.state.success && <SuccessMessage message={this.state.success} /> );
 
-    const companyHtml = () => {
-        if(!company || !company.userId) {
+    companyHtml = () => {
+        const {
+            name,
+            companyType,
+            website,
+            address,
+            facebook,
+            instagram,
+            twitter,
+            linkedIn,
+            image,
+            bio,
+        } = this.state;
+
+        if(!name || !this.user._id) {
             return <div>Loading...</div>
         }
         // const { name, companyType, website, address, facebook, instagram, twitter, linkedIn, image, video, bio } = company;
@@ -108,23 +134,23 @@ const Company = ({ user, token }) => {
                         <form>
                             <div className="form-row">
                                 <div className="form-group col-md-6">
-                                    { showLoader() }
-                                    { showError() }
-                                    { showSuccess() }
+                                    { this.showLoader() }
+                                    { this.showError() }
+                                    { this.showSuccess() }
                                 </div>
                             </div>
 
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputEmail4">Name</label>
-                                    <input type="text" onChange={handleChange('name')} className="form-control" value={name} />
+                                    <input type="text" onChange={this.handleChange('name')} className="form-control" value={name} />
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputEmail4">Company Type</label>
-                                    <select defaultValue={companyType} onChange={handleChange('companyType')} className="form-control">
+                                    <select defaultValue={companyType} onChange={this.handleChange('companyType')} className="form-control">
                                         <option>Select Type</option>
-                                        {companyTypeList &&
-                                            companyTypeList.map((c) => (
+                                        {this.companyTypeList &&
+                                            this.companyTypeList.map((c) => (
                                                 <option key={c._id} value={c._id}>
                                                     {c.name}
                                                 </option>
@@ -135,49 +161,49 @@ const Company = ({ user, token }) => {
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputEmail4">Website</label>
-                                    <input type="text" onChange={handleChange('website')} className="form-control" value={website} />
+                                    <input type="text" onChange={this.handleChange('website')} className="form-control" value={website} />
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputEmail4">Address</label>
-                                    <input type="text" onChange={handleChange('address')} className="form-control" value={address} />
+                                    <input type="text" onChange={this.handleChange('address')} className="form-control" value={address} />
                                 </div>
                             </div>
                             
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputPassword4">Facebook</label>
-                                    <input type="text" onChange={handleChange('facebook')} className="form-control" value={facebook} />
+                                    <input type="text" onChange={this.handleChange('facebook')} className="form-control" value={facebook} />
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputPassword4">Twitter</label>
-                                    <input type="text" onChange={handleChange('twitter')} className="form-control" value={twitter} />
+                                    <input type="text" onChange={this.handleChange('twitter')} className="form-control" value={twitter} />
                                 </div>
                             </div>
 
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputPassword4">LinkedIn</label>
-                                    <input type="text" onChange={handleChange('linkedIn')} className="form-control" value={linkedIn} />
+                                    <input type="text" onChange={this.handleChange('linkedIn')} className="form-control" value={linkedIn} />
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputPassword4">Instagram</label>
-                                    <input type="text" onChange={handleChange('instagram')} className="form-control" value={instagram} />
+                                    <input type="text" onChange={this.handleChange('instagram')} className="form-control" value={instagram} />
                                 </div>
                             </div>
 
                             <div className="form-row">
                                 <div className="form-group col-md-12">
                                     <label htmlFor="inputPassword4">Bio</label>
-                                    <textarea rows={2} cols={10} className="form-control" onChange={handleChange('bio')} value={bio}></textarea>
+                                    <textarea rows={2} cols={10} className="form-control" onChange={this.handleChange('bio')} value={bio}></textarea>
                                 </div>
                             </div>
 
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label className="btn btn-secondary">
-                                        <input onChange={handleChange('image')} type="file" name="image" accept="image/*" />
+                                        <input onChange={this.handleChange('image')} type="file" name="image" accept="image/*" />
                                     </label>
-                                    { image && (
+                                    { image && image.contentType && (
                                         <img 
                                             height="35px"
                                             src={`data:${image.contentType};base64,${arrayBufferToBase64(image.data.data)}`} 
@@ -192,7 +218,7 @@ const Company = ({ user, token }) => {
                                 </div> */}
                             </div>
 
-                            <button onClick={handleSubmit} type="submit" className="btn btn-primary">Update Company</button>
+                            <button onClick={this.handleSubmit} type="submit" className="btn btn-primary">Update Company</button>
                         </form>
                     </div>
                 </div>
@@ -200,11 +226,13 @@ const Company = ({ user, token }) => {
         )
     }
 
-    return (
-        <Layout>
-            { companyHtml() }
-        </Layout>
-    )
-};
+    render() {
+        return (
+            <Layout>
+                { this.companyHtml() }
+            </Layout>
+        )
+    };
+}
 
 export default Company;

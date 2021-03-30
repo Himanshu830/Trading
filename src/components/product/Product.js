@@ -86,10 +86,8 @@ class Product extends Component {
                     <td>{product.subCategoryId.name}</td>
                     <td>{product.minQuantity}</td>
                     <td>{product.unitPrice}</td>
-                    <td>
-                        <td className="text-center">
-                            <Link to={`/product/${product._id}`} type="button" className="btn btn-sm btn-outline-primary">View</Link>
-                        </td>
+                    <td className="text-center">
+                        <Link to={`/product/${product._id}`} type="button" className="btn btn-sm btn-outline-primary">View</Link>
                     </td>
                     <td className="text-center">
                         <Link to={`/product/update/${product._id}`} type="button" className="btn btn-sm btn-outline-primary">Update</Link>
