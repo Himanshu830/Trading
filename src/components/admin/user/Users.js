@@ -56,7 +56,6 @@ class Users extends Component {
     showSuccess = () => ( this.state.success && <SuccessMessage message={ this.state.success } /> );
 
     userListHtml = () => {
-        console.log(this.state)
         return this.state.users.map((user, key) => {
             return (
                 <tr key={user._id}>

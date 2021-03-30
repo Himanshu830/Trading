@@ -1,7 +1,7 @@
-import { API } from '../../config';
+import { API } from '../../../config';
 
-export const getCategories = (token, parent = null) => {
-    return fetch(`${API}/category?parent=${parent}`, {
+export const getParentCategory = (token) => {
+    return fetch(`${API}/category?parent=null`, {
         method: 'GET',
         headers: {
             Accept: "application/json",
@@ -17,8 +17,27 @@ export const getCategories = (token, parent = null) => {
         });
 }
 
-export const getOrderById = async (orderId, token) => {
-    return fetch(`${API}/order/${orderId}`, {
+
+export const getCategory = (token, search='') => {
+    search = (search) ? `?name=${search}` : '';
+    return fetch(`${API}/category${search}`, {
+        method: 'GET',
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => {
+            return { error: 'Something went wrong' }
+        });
+}
+
+export const getCategoryById = async (categoryId, token) => {
+    return fetch(`${API}/category/${categoryId}`, {
         method: 'GET',
         headers: {
             Accept: "application/json",
@@ -31,31 +50,15 @@ export const getOrderById = async (orderId, token) => {
         .catch(err => console.log(err));
 };
 
-export const getOrdersByUser = async (token, title) => {
-    title = (title) ? `?title=${title}` : ''
-    return fetch(`${API}/order${title}`, {
-        method: 'GET',
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        }
-    })
-        .then(response => {
-            return response.json();
-        })
-        .catch(err => console.log(err));
-}
-
-export const createOrder = (order, token) => {
-    return fetch(`${API}/order`, {
+export const createCategory = (category, token) => {
+    return fetch(`${API}/category`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(order)
+        body: JSON.stringify(category)
     })
         .then(response => {
             return response.json();
@@ -65,15 +68,15 @@ export const createOrder = (order, token) => {
         })
 }
 
-export const updateOrder = (orderId, order, token) => {
-    return fetch(`${API}/order/${orderId}`, {
+export const updateCategory = (categoryId, category, token) => {
+    return fetch(`${API}/category/${categoryId}`, {
         method: 'PATCH',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(order)
+        body: JSON.stringify(category)
     })
         .then(response => {
             return response.json();
@@ -83,8 +86,8 @@ export const updateOrder = (orderId, order, token) => {
         })
 }
 
-export const deleteOrder = (orderId, token) => {
-    return fetch(`${API}/order/${orderId}`, {
+export const deleteCategory = (categoryId, token) => {
+    return fetch(`${API}/category/${categoryId}`, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json',

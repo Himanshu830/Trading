@@ -1,29 +1,29 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Search from '../search/Search';
-import Layout from '../layout/Layout';
-import { getOrdersByUser, deleteOrder } from './api';
-import { SuccessMessage, ErrorMessage } from '../message/messages';
-import { Loader } from '../loader/loader';
-import Modal from '../modal/Modal';
+import Search from '../../search/Search';
+import Layout from '../../layout/Layout';
+import { getCategory, deleteCategory } from './api';
+import { SuccessMessage, ErrorMessage } from '../../message/messages';
+import { Loader } from '../../loader/loader';
+import Modal from '../../modal/Modal';
 
-class Order extends Component {
+class Category extends Component {
     state = {
-        order: [],
+        categories: [],
         id: '',
-        orderTitle: '',
+        categoryName: '',
         loading: false,
         error: '',
         redirect: false,
         success: ''
     }
 
-    getOrders = (searchTerm) => {
-        getOrdersByUser(this.props.token, searchTerm).then(data => {
+    getCategories = (term) => {
+        getCategory(this.props.token, term).then(data => {
             if (data.error) {
                 this.setState({ loading: false, error: data.error });
             } else {
-                this.setState({  loading: false, order: data.result });
+                this.setState({  loading: false, categories: data.result });
             }
         }).catch(error => {
             this.setState({ error: 'Something went wrong', loading: false})
@@ -32,13 +32,13 @@ class Order extends Component {
 
     componentDidMount() {
         this.setState({loading: true})
-        this.getOrders()
+        this.getCategories()
     }
 
     componentDidUpdate(prevProps, prevState) {
         if(this.state.redirect !== prevState.redirect) {
             this.setState({loading: true})
-            this.getOrders()
+            this.getCategories()
         }
     }
 
@@ -46,29 +46,27 @@ class Order extends Component {
     showError = () => ( this.state.error && <ErrorMessage message={ this.state.error} /> );
     showSuccess = () => ( this.state.success && <SuccessMessage message={ this.state.success } /> );
 
-    orderListHtml = () => {
-        return this.state.order.map((order, key) => {
-            let categoryName = (order.categoryId) ? order.categoryId.name : '';
-            let subCategoryName = (order.subCategoryId) ? order.subCategoryId.name : '';
+    categoryListHtml = () => {
+        return this.state.categories.map((category, key) => {
+            let parentCategory = category.parent ? category.parent.name : '-';
+
             return (
-                <tr key={order._id}>
+                <tr key={category._id}>
                     <th scope="row">{key + 1}</th>
-                    <td>{order.title}</td>
-                    <td>{order.budget}</td>
-                    <td>{categoryName}</td>
-                    <td>{subCategoryName}</td>
+                    <td>{category.name}</td>
+                    <td>{parentCategory}</td>
                     <td className="text-center">
-                        <Link to={`/order/update/${order._id}`} type="button" className="btn btn-sm btn-outline-primary">Update</Link>
+                        <Link to={`/admin/category/update/${category._id}`} type="button" className="btn btn-sm btn-outline-primary">Update</Link>
                     </td>
                     <td className="text-center">
-                        <button onClick={() => this.setState({id: order._id, orderTitle: order.title}) } className="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#exampleModalLong">Delete</button>
+                        <button onClick={() => this.setState({id: category._id}) } className="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#exampleModalLong">Delete</button>
                     </td>
                 </tr>
             )
         })
     }
 
-    orderHtml = () => {
+    categoriesHtml = () => {
         return (
             <div className="col-sm-9">
                 <div className="card">
@@ -76,7 +74,7 @@ class Order extends Component {
                         <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
                             <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                                 <li className="nav-item active">
-                                    <Link className="btn btn-sm btn-outline-primary my-2 my-sm-0" to="/order/new">Add Order</Link>
+                                    <Link className="btn btn-sm btn-outline-primary my-2 my-sm-0" to="/admin/category/new">Add Category</Link>
                                 </li>
                             </ul>
                             <Search onSearch={this.onSearch} />
@@ -91,15 +89,13 @@ class Order extends Component {
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Budget</th>
-                                    <th scope="col">Category</th>
-                                    <th scope="col">Sub-category</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Parent Category</th>
                                     <th scope="col">Update</th>
                                     <th scope="col">Delete</th>
                                 </tr>
                             </thead>
-                            <tbody>{ this.orderListHtml() }</tbody>
+                            <tbody>{ this.categoryListHtml() }</tbody>
                         </table>
                     </div>
                 </div>
@@ -109,31 +105,31 @@ class Order extends Component {
 
     onSearch = (term) => {
         this.setState({ loading: true });
-        this.getOrders(term);
+        this.getCategories(term);
     }
 
     onOrderDelete = () => {
         this.setState({loading: true});
-        deleteOrder(this.state.id, this.props.token).then(result => {
+        deleteCategory(this.state.id, this.props.token).then(result => {
             console.log(result)
             if(result.error) {
                 console.log('setting error...')
                 this.setState({ redirect: true, loading: false, error: result.error})
             } else {
-                this.setState({ redirect: true, loading: false, success: 'Order deleted successfully.'})
+                this.setState({ redirect: true, loading: false, success: 'Category deleted successfully.'})
             }
         }).catch(error => {
-            this.setState({ id: '', orderTitle: '', loading: false, error });
+            this.setState({ id: '', loading: false, error });
         })
     }
 
     render() {
         return (
             <Layout>
-                { this.orderHtml() }
+                { this.categoriesHtml() }
                 <Modal 
-                    title="Order Delete"
-                    content= { (this.state.orderTitle) ? `Are you sure you want to delete order ${this.state.orderTitle}?` : 'Are you sure you want to delete this order?'}
+                    title="Category Delete"
+                    content= { (this.state.categoryName) ? `Are you sure you want to delete order ${this.state.categoryName}?` : 'Are you sure you want to delete this category?'}
                     onSubmit={() => this.onOrderDelete() }
                     onCancel={() => {}}
                 />
@@ -142,4 +138,4 @@ class Order extends Component {
     }
 }
 
-export default Order;
+export default Category;

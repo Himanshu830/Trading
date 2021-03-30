@@ -111,11 +111,11 @@ const Profile = ({ user, token }) => {
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputAddress">Country</label>
-                                    <select onChange={handleChange('country')} className="form-control">
-                                        <option>Select Country {country}</option>
+                                    <select onChange={handleChange('country')} className="form-control" value={country}>
+                                        <option>Select Country</option>
                                         {countryList &&
                                             countryList.map((c) => (
-                                                <option key={c._id} value={c._id} selected={ c._id === parseInt(country) ? 'selected' : ''}>
+                                                <option key={c._id} value={c._id}>
                                                     {c.name}
                                                 </option>
                                             ))}

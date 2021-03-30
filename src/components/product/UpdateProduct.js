@@ -31,21 +31,25 @@ class UpdateProduct extends Component {
 
     componentDidMount() {
         this.getCategoryList(null);
+
         getProductById(this.productId, this.token).then(product => {
             let data = product.result;
+
+            let categoryId = (data.categoryId) ? data.categoryId._id : '';
+            let subCategoryId = (data.subCategoryId) ? data.subCategoryId._id : '';
             this.setState({
                 name: data.name,
                 description: data.description,
                 unitPrice: data.unitPrice,
-                categoryId: data.categoryId._id,
-                subCategoryId: data.subCategoryId._id,
+                categoryId: categoryId,
+                subCategoryId: subCategoryId,
                 minQuantity: data.minQuantity,
                 packagingDetail: data.packagingDetail,
                 deliveryTime: data.deliveryTime,
                 image: data.image
             });
 
-            this.getCategoryList(data.categoryId._id)
+            this.getCategoryList(data.categoryId)
         }).catch(error => {
             console.log(error)
             this.setState({ error: 'Product not found.'})
@@ -172,7 +176,7 @@ class UpdateProduct extends Component {
                                 <div className="form-row">
                                     <div className="form-group col-md-6">
                                         <label htmlFor="inputState">Sub Category</label>
-                                        <select defaultValue={subCategoryId} onChange={this.handleChange('subCategoryId')} className="form-control" value={subCategoryId}>
+                                        <select onChange={this.handleChange('subCategoryId')} className="form-control" value={subCategoryId}>
                                             <option value="">Select Sub-category</option>
                                             {subCategories &&
                                                 subCategories.map((category) => (

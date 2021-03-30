@@ -71,6 +71,8 @@ class Product extends Component {
             return '';
         }
         return product.map((product, key) => {
+            let categoryName = (product.categoryId) ? product.categoryId.name : '';
+            let subCategoryName = (product.subCategoryId) ? product.subCategoryId.name : '';
             return (
                 <tr key={product._id}>
                     <th scope="row">{key + 1}</th>
@@ -82,8 +84,8 @@ class Product extends Component {
                             alt='product' 
                         />
                     </td>
-                    <td>{product.categoryId.name}</td>
-                    <td>{product.subCategoryId.name}</td>
+                    <td>{categoryName}</td>
+                    <td>{subCategoryName}</td>
                     <td>{product.minQuantity}</td>
                     <td>{product.unitPrice}</td>
                     <td className="text-center">

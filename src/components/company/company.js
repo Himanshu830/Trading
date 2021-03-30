@@ -113,7 +113,7 @@ class Company extends Component {
             bio,
         } = this.state;
 
-        if(!name || !this.user._id) {
+        if(!this.user || !this.user._id) {
             return <div>Loading...</div>
         }
         // const { name, companyType, website, address, facebook, instagram, twitter, linkedIn, image, video, bio } = company;

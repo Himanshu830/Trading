@@ -38,12 +38,15 @@ class ViewProduct extends Component {
         this.setState({ loading: true });
         getProductById(this.productId).then(product => {
             let data = product.result;
+
+            let categoryName = (data.categoryId) ? data.categoryId._id : '';
+            let subCategoryName = (data.subCategoryId) ? data.subCategoryId._id : '';
             this.setState({
                 name: data.name,
                 description: data.description,
                 unitPrice: data.unitPrice,
-                categoryName: data.categoryId.name,
-                subCategoryName: data.subCategoryId.name,
+                categoryName: categoryName,
+                subCategoryName: subCategoryName,
                 minQuantity: data.minQuantity,
                 packagingDetail: data.packagingDetail,
                 deliveryTime: data.deliveryTime,

@@ -32,6 +32,13 @@ const Sidebar = ({ history }) => {
                             aria-controls="v-pills-home">Dashboard</Link>
                         
                         <Link 
+                            to="/admin/category"
+                            className={`nav-link ${ isActive(history, "/admin/category") }`} 
+                            data-toggle="pill"
+                            role="tab"
+                            aria-controls="v-pills-home">Category</Link>
+                        
+                        <Link 
                             to="/admin/users"
                             className={`nav-link ${ isActive(history, "/admin/users") }`} 
                             data-toggle="pill"
