@@ -6,6 +6,7 @@ import { getProductsByUser, deleteProduct } from './api';
 import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
 import Modal from '../modal/Modal';
+import { arrayBufferToBase64 } from '../../utility/image';
 
 class Product extends Component {
     state = {
@@ -65,11 +66,22 @@ class Product extends Component {
     showSuccess = () => ( this.state.success && <SuccessMessage message={ this.state.success } /> );
 
     productListHtml = () => {
-        return this.state.product.map((product, key) => {
+        let {product} = this.state;
+        if(!product) {
+            return '';
+        }
+        return product.map((product, key) => {
             return (
                 <tr key={product._id}>
                     <th scope="row">{key + 1}</th>
                     <td>{product.name}</td>
+                    <td>
+                        <img 
+                            height="35px"
+                            src={`data:${product.image.contentType};base64,${arrayBufferToBase64(product.image.data.data)}`} 
+                            alt='product' 
+                        />
+                    </td>
                     <td>{product.categoryId.name}</td>
                     <td>{product.subCategoryId.name}</td>
                     <td>{product.minQuantity}</td>
@@ -109,6 +121,7 @@ class Product extends Component {
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Name</th>
+                                    <th scope="col">Image</th>
                                     <th scope="col">Category</th>
                                     <th scope="col">Sub-category</th>
                                     <th scope="col">Min Qty.</th>

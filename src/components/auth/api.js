@@ -34,6 +34,7 @@ export const activateAccount = token => {
 }
 
 export const signin = user => {
+    console.log(API);
     return fetch(`${API}/signin`, {
         method: 'POST',
         headers: {

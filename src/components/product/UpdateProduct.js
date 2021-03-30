@@ -4,6 +4,7 @@ import Layout from '../layout/Layout';
 import { getCategories, getProductById, updateProduct } from './api';
 import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
+import { arrayBufferToBase64 } from '../../utility/image';
 
 class UpdateProduct extends Component {
     state = {
@@ -41,6 +42,7 @@ class UpdateProduct extends Component {
                 minQuantity: data.minQuantity,
                 packagingDetail: data.packagingDetail,
                 deliveryTime: data.deliveryTime,
+                image: data.image
             });
 
             this.getCategoryList(data.categoryId._id)
@@ -201,7 +203,14 @@ class UpdateProduct extends Component {
                                     <div className="form-group col-md-6">
                                         <label className="btn btn-secondary">
                                             <input onChange={this.handleChange('image')} type="file" name="image" accept="image/*" />
-                                        </label>                    
+                                        </label>
+                                        {image && (
+                                            <img 
+                                            height="35px"
+                                            src={`data:${image.contentType};base64,${arrayBufferToBase64(image.data.data)}`} 
+                                            alt='product' 
+                                        />
+                                        )}
                                     </div>
                                     {/* <div className="form-group col-md-6">
                                         <label className="btn btn-secondary">

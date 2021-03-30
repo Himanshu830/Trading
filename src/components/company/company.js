@@ -3,6 +3,7 @@ import Layout from '../layout/Layout';
 import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
 import { getCompany, updateCompany } from './api';
+import { arrayBufferToBase64 } from '../../utility/image';
 
 const Company = ({ user, token }) => {
     const [company, setCompany] = useState({
@@ -176,6 +177,13 @@ const Company = ({ user, token }) => {
                                     <label className="btn btn-secondary">
                                         <input onChange={handleChange('image')} type="file" name="image" accept="image/*" />
                                     </label>
+                                    { image && (
+                                        <img 
+                                            height="35px"
+                                            src={`data:${image.contentType};base64,${arrayBufferToBase64(image.data.data)}`} 
+                                            alt='product' 
+                                        />
+                                    )}
                                 </div>
                                 {/* <div className="form-group col-md-6">
                                     <label className="btn btn-secondary">
