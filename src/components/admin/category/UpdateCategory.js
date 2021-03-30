@@ -57,7 +57,7 @@ class UpdateCategory extends Component {
 
         const data = {
             name,
-            parent,
+            parent: parent ? parent : null,
             userId: this.user._id
         }
 
@@ -126,7 +126,7 @@ class UpdateCategory extends Component {
                                 <div className="form-group col-md-6">
                                         <label htmlFor="inputState">Parent</label>
                                         <select onChange={this.handleChange('parent')} className="form-control" value={parent}>
-                                            <option>Select Category</option>
+                                            <option value="">Select Category</option>
                                             {categories &&
                                                 categories.map((category) => (
                                                     <option key={category._id} value={category._id}>
