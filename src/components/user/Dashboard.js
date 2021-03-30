@@ -40,8 +40,6 @@ const Dashboard = ({ user, token }) => {
                             </ul>
                         </div>
                     </nav>
-                    {/* <div className="card-body">
-                    <h3 className="card-header">User Information</h3> */}
                         <ul className="list-group">
                             <li className="list-group-item"><b>Name</b>: {name}</li>
                             <li className="list-group-item"><b>Email</b>: {email}</li>
@@ -51,7 +49,6 @@ const Dashboard = ({ user, token }) => {
                                 <b>Role</b>: {role === 1 ? "Admin" : "Registered User"}
                             </li>
                         </ul>
-                    {/* </div> */}
                 </div>
             </div>
         )

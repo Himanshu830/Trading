@@ -17,12 +17,11 @@ export const getCategories = (token, parent = null) => {
         });
 }
 
-export const getProductById = (productId, token) => {
+export const getProductById = (productId) => {
     return fetch(`${API}/product/${productId}`, {
         method: 'GET',
         headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`
+            Accept: "application/json"
         }
     })
         .then(response => {

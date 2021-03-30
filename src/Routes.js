@@ -17,6 +17,7 @@ import Contact from './components/contact/Contact';
 
 import Product from './components/product/Product';
 import AddProduct from './components/product/AddProduct';
+import ViewProduct from './components/product/ViewProduct';
 import UpdateProduct from './components/product/UpdateProduct';
 
 import Order from './components/order/Order';
@@ -49,6 +50,7 @@ const Routes = () => {
 
                 <PrivateRoute path="/product" exact component={Product} />
                 <PrivateRoute path="/product/new" exact component={AddProduct} />
+                <Route path="/product/:productId" exact component={ViewProduct} />
                 <PrivateRoute path="/product/update/:productId" exact component={UpdateProduct} />
 
                 <PrivateRoute path="/order" exact component={Order} />
