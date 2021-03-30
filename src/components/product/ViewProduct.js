@@ -90,26 +90,71 @@ class ViewProduct extends Component {
                                 </div>
                             </nav>
                             <ul className="list-group">
-                                <li className="list-group-item"><b>Name</b>: {name}</li>
-                                <li className="list-group-item"><b>Category</b>: {categoryName}</li>
-                                <li className="list-group-item"><b>Subcategory</b>: {subCategoryName}</li>
-                                <li className="list-group-item"><b>Description</b>: {description}</li>
-                                <li className="list-group-item"><b>Unit Price</b>: {unitPrice}</li>
-                                <li className="list-group-item"><b>Min Quantity</b>: {minQuantity}</li>
-                                <li className="list-group-item"><b>Packaging Details</b>: {packagingDetail}</li>
-                                <li className="list-group-item"><b>Delivery Time</b>: {deliveryTime}</li>
-                                <li className="list-group-item"><b>Image</b>:
-                                {image && (
-                                        <img
-                                            height="75px"
-                                            src={`data:${image.contentType};base64,${arrayBufferToBase64(image.data.data)}`}
-                                            alt='product'
-                                        />
-                                    )}
+                                <li className="list-group-item">
+                                    <div className="row">
+                                        <div className="col-sm-2"><b>Name</b>:</div>
+                                        <div className="col-sm-6">{name}</div>
+                                    </div>
                                 </li>
                                 <li className="list-group-item">
                                     <div className="row">
-                                        <div className="col-sm-1"><b>Share</b>:</div>
+                                        <div className="col-sm-2"><b>Category</b>:</div>
+                                        <div className="col-sm-6">{categoryName}</div>
+                                    </div>
+                                </li>
+                                <li className="list-group-item">
+                                    <div className="row">
+                                        <div className="col-sm-2"><b>Subcategory</b>:</div>
+                                        <div className="col-sm-6">{subCategoryName}</div>
+                                    </div>
+                                </li>
+                                <li className="list-group-item">
+                                    <div className="row">
+                                        <div className="col-sm-2"><b>Description</b>:</div>
+                                        <div className="col-sm-6">{description}</div>
+                                    </div>
+                                </li>
+                                <li className="list-group-item">
+                                    <div className="row">
+                                        <div className="col-sm-2"><b>Unit Price</b>:</div>
+                                        <div className="col-sm-6">{unitPrice}</div>
+                                    </div>
+                                </li>
+                                <li className="list-group-item">
+                                    <div className="row">
+                                        <div className="col-sm-2"><b>Min Quantity</b>:</div>
+                                        <div className="col-sm-6">{minQuantity}</div>
+                                    </div>
+                                </li>
+                                <li className="list-group-item">
+                                    <div className="row">
+                                        <div className="col-sm-2"><b>Packaging Detail</b>:</div>
+                                        <div className="col-sm-6">{packagingDetail}</div>
+                                    </div>
+                                </li>
+                                <li className="list-group-item">
+                                    <div className="row">
+                                        <div className="col-sm-2"><b>Delivery Time</b>:</div>
+                                        <div className="col-sm-6">{deliveryTime}</div>
+                                    </div>
+                                </li>
+                                <li className="list-group-item">
+                                    <div className="row">
+                                        <div className="col-sm-2"><b>Image</b>:</div>
+                                        <div className="col-sm-6">
+                                        {image && (
+                                            <img
+                                                height="75px"
+                                                src={`data:${image.contentType};base64,${arrayBufferToBase64(image.data.data)}`}
+                                                alt='product'
+                                            />
+                                        )}
+                                        </div>
+                                    </div>
+                                </li>
+                                <li className="list-group-item">
+                                    <div className="row">
+                                        <div className="col-sm-2"><b>Share</b>:</div>
                                         { this.socialShareButton() }
                                     </div>
                                 </li>
