@@ -134,7 +134,7 @@ class UpdateOrder extends Component {
                             <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
                                 <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                                     <li className="nav-item active">
-                                        <Link className="nav-link" to="/product"><strong>Add New Orders</strong></Link>
+                                        <Link className="nav-link" to="/product"><strong>Update Orders</strong></Link>
                                     </li>
                                 </ul>
                             </div>
