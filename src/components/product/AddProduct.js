@@ -194,11 +194,11 @@ const AddProduct = ({ user, token }) => {
                                             <input onChange={handleChange('image')} type="file" name="image" accept="image/*" />
                                         </label>                    
                                     </div>
-                                    {/* <div className="form-group col-md-6">
+                                    <div className="form-group col-md-6">
                                         <label className="btn btn-secondary">
                                             <input onChange={handleChange('image')} type="file" name="image" accept="image/*" />
                                         </label>             
-                                    </div> */}
+                                    </div>
                                 </div>
 
                                 <button onClick={handleSubmit} type="submit" className="btn btn-primary">Add Product</button>

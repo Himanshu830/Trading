@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 import MessageList from './MessageList';
 import Menu from '../layout/partial/Menu';
 
-import './chat.css';
+// import './chat.css';
 
 class Chat extends Component {
     state = { loading: false, token: null, search: '', profile: {}, users: [], selectedUserId: undefined, selectedUser: {}, messages: []}

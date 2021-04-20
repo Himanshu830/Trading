@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import Menu from './partial/Menu';
+import Footer from './partial/Footer';
 import Sidebar from './partial/Sidebar';
 import { isAuthenticated } from '../auth/api';
 
@@ -17,6 +18,7 @@ const Layout = ( props ) => {
         <Fragment>
            <Menu />
            { isAuthenticated() && logedInHtml() }
+           <Footer />
         </Fragment>
     )   
 }

@@ -4,7 +4,7 @@ import Layout from './layout/Layout';
 const Home = () => {
     return (
         <Layout>
-            <div>Home page</div>
+            <div>You are on the Homepage.</div>
         </Layout>
     )
 };

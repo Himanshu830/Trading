@@ -11,11 +11,13 @@ const isActive = (history, path) => {
 };
 
 const Menu = ({ history }) => {
+    const { user } = isAuthenticated()
+
     const renderMenu = () => {
         return (
             <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-                {isAuthenticated() && isAuthenticated().user.role === 0 && (
+                {/* {isAuthenticated() && isAuthenticated().user.role === 0 && (
                     <li className="nav-item">
                         <Link
                             className="nav-link"
@@ -23,21 +25,21 @@ const Menu = ({ history }) => {
                             to="/chat"
                         >Chat</Link>
                     </li>
-                )}
+                )} */}
 
                     <li className="nav-item">
                         <Link
                             className="nav-link"
                             style={isActive(history, "/about")}
                             to="/about"
-                        >About</Link>
+                        >About Us</Link>
                     </li>
                     <li className="nav-item">
                     <Link
                             className="nav-link"
                             style={isActive(history, "/contact")}
                             to="/contact"
-                        >Contact</Link>
+                        >Contact Us</Link>
                     </li>
                 </ul>
 
@@ -63,6 +65,26 @@ const Menu = ({ history }) => {
                         
                     )}
 
+                    {(user && user.role === 1) && (
+                        <Link
+                            to="/admin/dashboard"
+                            style={isActive(history, "/admin/dashboard")}
+                            className="nav-link"
+                        >
+                            Dashboard
+                        </Link>
+                    )}
+
+                    {(user && user.role !== 1) && (
+                        <Link
+                            to="/user/dashboard"
+                            style={isActive(history, "/user/dashboard")}
+                            className="nav-link"
+                        >
+                            Dashboard
+                        </Link>
+                    )}
+
                     {isAuthenticated() && (
                         <span
                             className="nav-link"
@@ -83,7 +105,7 @@ const Menu = ({ history }) => {
 
     return (
         <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
-            <Link className="navbar-brand" to='/'>Business</Link>
+            <Link className="navbar-brand" to='/'>Trading Site</Link>
             {renderMenu()}
         </nav>
     );
