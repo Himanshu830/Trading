@@ -13,7 +13,6 @@ export const signup = user => {
             return response.json();
         })
         .catch(err => {
-            
             console.log(err);
         });
 };

@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import Menu from '../layout/partial/Menu';
 import { signup } from './api';
 import validator from 'validator';
-import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
 import Popup from '../modal/Popup';
+import SuccessModal from '../modal/SuccessModal';
+import ErrorModal from '../modal/ErrorModal';
+import { CountryList } from '../constant';
 
 import './auth.css';
 
@@ -15,31 +17,41 @@ class Signup  extends Component {
         email: '',
         password: '',
         confirm_password: '',
+        country: '',
         tc: false,
         loading: false,
         isDisabled: true,
         error: '',
-        success: false
+        success: false,
+        errorModal: false,
+        successModal: false
     }
 
     handleChange = name => event => {
         this.setState({ [name]: event.target.value, error: false });
     };
 
-    handleBlur = (event) => {
+    handleBlur = () => {
         const { email, password, confirm_password } = this.state;
         if (password && confirm_password && password !== confirm_password) {
-            this.setState({ error: 'Password not matched.', success: false });
+            this.setState({ errorModal: true, error: 'Password not matched.', success: false });
         }
         if(email && !validator.isEmail(email)) {
-            this.setState({ error: 'Please Enter valid email.', success: false });
+            this.setState({ errorModal: true, error: 'Please Enter valid email.', success: false });
         }
+
         this.verifySingupButton()
     };
 
+    handleCountry = () => {
+        if(!this.state.country) {
+            this.setState({ errorModal: true, error: 'Please Select country.', success: false });
+        }
+        this.verifySingupButton();
+    }
+
     verifySingupButton = () => {
-        const { name, email, password, tc } = this.state;
-        if (name && email && password && tc) {
+        if (!this.state.error && this.state.country) {
             this.setState({ isDisabled: false })
         } else {
             this.setState({ isDisabled: true })
@@ -57,32 +69,33 @@ class Signup  extends Component {
     clickSubmit = event => {
         event.preventDefault();
         this.setState({ loading: true })
-        const { name, email, password } = this.state;
-        signup({ name, email, password }).then(data => {
+        const { name, email, password, country } = this.state;
+        signup({ name, email, password, country }).then(data => {
             if (data.error) {
-                this.setState({ error: data.error, loading:false, success: false });
+                this.setState({ errorModal: true, error: data.error, loading:false, success: false });
+                console.log('Error occurred.')
             } else {
                 this.setState({
                     name: '',
                     email: '',
                     password: '',
                     confirm_password: '',
+                    country: '',
                     loading:false,
                     error: '',
                     tc: false,
-                    success: 'Account created successfully.',
-                    isDisabled: true
-                });
+                    success: 'Thanks for signing up with us. Your account was created successfully. Kindly activate the account by clicking on the link sent to your email.',
+                    isDisabled: true,
+                    successModal: true
+                });                
             }
         });
     };
 
     showLoader = () => ( this.state.loading && <Loader /> )
-    showError = () => ( this.state.error && <ErrorMessage message={this.state.error} /> );
-    showSuccess = () => (this.state.success && <SuccessMessage message={this.state.success} /> );
 
     signupHtml = () => {
-        const { name, email, password, confirm_password, tc, isDisabled } = this.state;
+        const { name, email, password, confirm_password, country, tc, isDisabled } = this.state;
 
         return (
             <div className="signup-wrapper">
@@ -100,7 +113,17 @@ class Signup  extends Component {
                                 <input onBlur={this.handleBlur} onChange={this.handleChange('password')} value={password} type="password" className="form-control" placeholder="Password" />
                             </div>
                             <div className="form-group">
-                            <input onBlur={this.handleBlur} onChange={this.handleChange('confirm_password')} value={confirm_password} type="password" className="form-control" placeholder="Confirm Password" />
+                                <input onBlur={this.handleBlur} onChange={this.handleChange('confirm_password')} value={confirm_password} type="password" className="form-control" placeholder="Confirm Password" />
+                            </div>
+                            <div className="form-group">
+                                <select onBlur={this.handleCountry} defaultValue={country} onChange={this.handleChange('country')} className="form-control">
+                                    <option>Select Country</option>
+                                    {Object.values(CountryList).map((c) => (
+                                        <option key={c} value={c}>
+                                            {c}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="form-check mb-3">
                               <input type="checkbox" checked={tc} onChange={this.handleCheckBox}  />
@@ -133,13 +156,15 @@ class Signup  extends Component {
         )
     }
 
+    onClose = () => {
+        this.setState({errorModal: false, error: ''});
+    }
+
     render() {
         return (
             <Fragment>
                 <Menu />
                 { this.showLoader() }
-                { this.showError() }
-                { this.showSuccess() }
                 { this.signupHtml()}
                 <Popup 
                     title="Term & Condition"
@@ -147,6 +172,24 @@ class Signup  extends Component {
                     onSubmit={() => this.onOrderDelete() }
                     onCancel={() => {}}
                 />
+
+                { this.state.successModal && 
+                    <SuccessModal
+                        title="Success"
+                        content= { this.state.success }
+                        redirectUrl= {`/signin`}
+                        isDisplay={this.state.successModal}
+                    />
+                }
+
+                { this.state.errorModal && 
+                    <ErrorModal
+                        title="Error"
+                        content= { this.state.error }
+                        isDisplay={this.state.errorModal}
+                        onSubmit={this.onClose}
+                    />
+                }
             </Fragment>
         )
     }

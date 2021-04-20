@@ -2,8 +2,8 @@ import React, { Fragment, Component } from 'react';
 import { Redirect, Link } from "react-router-dom";
 import Menu from '../layout/partial/Menu';
 import { signin, authenticate, isAuthenticated } from "../auth/api";
-import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
+import ErrorModal from '../modal/ErrorModal';
 
 import './auth.css';
 
@@ -12,6 +12,8 @@ class Signin extends Component {
         email: '',
         password: '',
         error: '',
+        errorModal: false,
+        successModal: false,
         rememberMe: false,
         loading: false,
         redirectToReferrer: false,
@@ -56,7 +58,7 @@ class Signin extends Component {
         const { email, password, rememberMe } = this.state;
         signin({ email, password }).then(data => {
             if (data.error) {
-                this.setState({ error: data.error, loading: false });
+                this.setState({ errorModal: true, error: data.error, loading: false });
             } else {
                 this.setState({user: data.user})
                 if(rememberMe) {
@@ -96,10 +98,10 @@ class Signin extends Component {
                             </div>
                             <div className="form-check mb-3">
                                 <input className="form-check-input" type="checkbox" onChange={this.toggleRememberMe} checked={rememberMe} placeholder="Remember Me" />
-                                <label className="form-check-label" for="exampleCheck1">Remember Me</label>
+                                <label className="form-check-label" htmlFor="exampleCheck1">Remember Me</label>
                             </div>
                             <div className="form-group">
-                                <button type="submit" onClick={this.formSubmit} className="btn btn-outline-primary w-100">Login</button>
+                                <button type="submit" onClick={this.formSubmit} className="btn btn-outline-primary w-100" data-toggle="modal" data-target=".modal">Login</button>
                             </div>
                             <div className="text-center">
                                 <small>or </small><Link to="/forgot-password">Forgot Password</Link>
@@ -114,11 +116,8 @@ class Signin extends Component {
     }
 
     showLoader = () => ( this.state.loading && <Loader /> )
-    showError = () => ( this.state.error && <ErrorMessage message={this.state.error} /> );
-    showSuccess = () => (this.state.success && <SuccessMessage message={this.state.success} /> );
 
     redirectUser = () => {
-        console.log(this.state)
         const { user } = this.state
         if (this.state.redirectToReferrer) {
             if (user && user.role === 1) {
@@ -140,10 +139,17 @@ class Signin extends Component {
             <Fragment>
                 <Menu />
                 { this.showLoader() }
-                { this.showError() }
-                { this.showSuccess() }
                 { this.signinHtml() }
                 { this.redirectUser() }
+
+
+                { this.state.errorModal && 
+                    <ErrorModal
+                        title="Authentication failed"
+                        content= { this.state.error }
+                        isDisplay={this.state.errorModal}
+                    />
+                }
             </Fragment>
         )
     }
