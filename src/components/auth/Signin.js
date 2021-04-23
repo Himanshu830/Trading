@@ -58,6 +58,7 @@ class Signin extends Component {
         const { email, password, rememberMe } = this.state;
         signin({ email, password }).then(data => {
             if (data.error) {
+                console.log(`Error: ${data.error}`)
                 this.setState({ errorModal: true, error: data.error, loading: false });
             } else {
                 this.setState({user: data.user})
@@ -118,13 +119,15 @@ class Signin extends Component {
     showLoader = () => ( this.state.loading && <Loader /> )
 
     redirectUser = () => {
-        const { user } = this.state
+        // const { user } = this.state
         if (this.state.redirectToReferrer) {
-            if (user && user.role === 1) {
-                return <Redirect to="/admin/dashboard" />;
-            } else {
-                return <Redirect to="/user/dashboard" />;
-            }
+            // if (user && user.role === 1) {
+            //     return <Redirect to="/" />;
+            // } else {
+            //     return <Redirect to="/" />;
+            // }
+
+            return <Redirect to="/" />;
         }
 
         const isLoginUser = isAuthenticated();
@@ -148,6 +151,7 @@ class Signin extends Component {
                         title="Authentication failed"
                         content= { this.state.error }
                         isDisplay={this.state.errorModal}
+                        onSubmit = { () => {}}
                     />
                 }
             </Fragment>

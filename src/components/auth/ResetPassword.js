@@ -1,9 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import Menu from '../layout/partial/Menu';
 import { reset, resetPassword } from '../auth/api';
-import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
+import SuccessModal from '../modal/SuccessModal';
+import ErrorModal from '../modal/ErrorModal';
 
 import './auth.css';
 
@@ -13,7 +13,9 @@ const ResetPassword = ({match}) => {
         confirmPassword: '',
         loading: false,
         error: '',
-        success: ''
+        success: '',
+        errorModal: false,
+        successModal: false
     });
 
     const { token } = match.params;
@@ -57,26 +59,25 @@ const ResetPassword = ({match}) => {
         if(validatePassword()) {
             resetPassword(token, password).then( data => {
                 if (data.error) {
-                    return setValues({ ...values, loading: false, error: data.error });
+                    return setValues({ ...values, loading: false, errorModal: true, error: data.error });
                 } else if(!data.success) {
-                    return setValues({ ...values, loading: false, error: data.message });
+                    return setValues({ ...values, loading: false, errorModal: true, error: data.message });
                 } else {
                     setValues({
                         ...values,
                         loading: false,
                         error: '',
-                        success: 'Your password has been updated. Please Signin.'
+                        success: 'Your password has been updated. Please Signin.',
+                        successModal: true
                     });
                 }
             }).catch(error => {
-                setValues({ ...values, error: error.message, success: false });
+                setValues({ ...values, errorModal: true, error: error.message, success: false });
             });
         }
     };
 
     const showLoader = () => ( loading && <Loader /> )
-    const showError = () => ( error && <ErrorMessage message={ error} /> );
-    const showSuccess = () => ( success && <SuccessMessage message={success} /> );
 
     const resetPasswordForm = () => (
         <div className="login-wrapper">
@@ -116,13 +117,33 @@ const ResetPassword = ({match}) => {
         </div>
     );
 
+    const onClose = () => {
+        setValues({...values, errorModal: false, error: ''});
+    }
+
     return (
         <Fragment>
             <Menu />
             { showLoader() }
-            { showError() }
-            { showSuccess() }
             { resetPasswordForm() }
+
+            { values.successModal && 
+                <SuccessModal
+                    title="Success"
+                    content= { values.success }
+                    redirectUrl= {`/signin`}
+                    isDisplay={values.successModal}
+                />
+            }
+
+            { values.errorModal && 
+                <ErrorModal
+                    title="Error"
+                    content= { values.error }
+                    isDisplay={values.errorModal}
+                    onSubmit={onClose}
+                />
+            }
         </Fragment>
     )
 };

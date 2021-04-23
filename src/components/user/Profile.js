@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import Layout from '../layout/Layout';
-import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
 import { update, updateUser } from '../user/api';
+import { CountryList } from '../constant';
+import ErrorModal from '../modal/ErrorModal';
+import SuccessModal from '../modal/SuccessModal';
 
 const Profile = ({ user, token }) => {
 
@@ -13,19 +15,14 @@ const Profile = ({ user, token }) => {
         country: '',
         loading: false,
         error: '',
-        success: ''
+        success: '',
+        errorModal: false,
+        successModal: false
     });
 
     useEffect(() => {
         setValues({ ...values, ...user})
     }, []);
-
-    const countryList = [
-        {_id: 1, name: 'India'},
-        {_id: 2, name: 'USA'},
-        {_id: 3, name: 'Canada'},
-        {_id: 4, name: 'UK'}
-    ];
 
     const { name, email, password, country, loading, error, success } = values;
 
@@ -40,7 +37,7 @@ const Profile = ({ user, token }) => {
         update(user._id, token, { name, email, password, country }).then(data => {
             if (data.error) {
                 console.log(data.error)
-                setValues({ ...values, error: data.error, loading: false, success: false });
+                setValues({ ...values, errorModal: true, error: data.error, loading: false, success: false });
             } else {
                 updateUser(data, () => {
                     setValues({
@@ -50,7 +47,8 @@ const Profile = ({ user, token }) => {
                         // company: data.company,
                         country: data.country,
                         loading: false,
-                        success: 'Profile updated successfully.'
+                        success: 'Profile updated successfully.',
+                        successModal: true
                     });
                 });
             }
@@ -58,8 +56,6 @@ const Profile = ({ user, token }) => {
     };
 
     const showLoader = () => ( loading && <Loader /> )
-    const showError = () => ( error && <ErrorMessage message={ error} /> );
-    const showSuccess = () => ( success && <SuccessMessage message={success} /> );
 
     const profileHtml = () => {
         return (
@@ -77,13 +73,6 @@ const Profile = ({ user, token }) => {
                     <div className="card-body">
                         <form>
                             { showLoader() }
-
-                            <div className="form-row">
-                                <div className="form-group col-md-6">
-                                    { showError() }
-                                    { showSuccess() }
-                                </div>
-                            </div>
 
                             <div className="form-row">
                                 <div className="form-group col-md-6">
@@ -111,15 +100,14 @@ const Profile = ({ user, token }) => {
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputAddress">Country</label>
-                                    <select onChange={handleChange('country')} className="form-control" value={country}>
-                                        <option>Select Country</option>
-                                        {countryList &&
-                                            countryList.map((c) => (
-                                                <option key={c._id} value={c._id}>
-                                                    {c.name}
-                                                </option>
-                                            ))}
-                                    </select>
+                                    <select value={country} onChange={handleChange('country')} className="form-control">
+                                    <option>Select Country</option>
+                                    {Object.values(CountryList).map((c) => (
+                                        <option key={c} value={c}>
+                                            {c}
+                                        </option>
+                                    ))}
+                                </select>
                                 </div>
                                 <div className="form-group col-md-6"></div>
                             </div>
@@ -131,9 +119,32 @@ const Profile = ({ user, token }) => {
         )
     }
 
+    const onClose = () => {
+        setValues({errorModal: false, error: ''});
+    }
+
     return (
         <Layout>
+            <Fragment>
             {profileHtml()}
+                { values.successModal && 
+                    <SuccessModal
+                        title="Success"
+                        content= { values.success }
+                        redirectUrl= {`/`}
+                        isDisplay={values.successModal}
+                    />
+                }
+
+                { values.errorModal && 
+                    <ErrorModal
+                        title="Error"
+                        content= { values.error }
+                        isDisplay={values.errorModal}
+                        onSubmit={onClose}
+                    />
+                }
+            </Fragment>            
         </Layout>
     )
 };

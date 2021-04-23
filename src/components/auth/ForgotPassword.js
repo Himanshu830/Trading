@@ -2,8 +2,9 @@ import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Menu from '../layout/partial/Menu';
 import { recoverPassword } from '../auth/api';
-import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
+import SuccessModal from '../modal/SuccessModal';
+import ErrorModal from '../modal/ErrorModal';
 
 import './auth.css';
 
@@ -12,7 +13,9 @@ const ForgotPassword = () => {
         email: '',
         loading: false,
         error: '',
-        success: ''
+        success: '',
+        errorModal: false,
+        successModal: false
     });
 
     const { email, loading, error, success } = values;
@@ -27,24 +30,23 @@ const ForgotPassword = () => {
         recoverPassword(email).then(data => {
             console.log(data)
             if (data.error) {
-                return setValues({ ...values, loading: false, error: data.error });
+                return setValues({ ...values, loading: false, errorModal: true, error: data.error });
             } else if(!data.success) {
-                return setValues({ ...values, loading: false, error: data.message });
+                return setValues({ ...values, loading: false, errorModal: true, error: data.message });
             } else {
                 setValues({
                     ...values,
                     email: '',
                     loading: false,
                     error: '',
-                    success: 'Password reset link has been sent on your email.'
+                    success: 'Password reset link has been sent on your email.',
+                    successModal: true
                 });
             }
         });
     };
 
     const showLoader = () => ( loading && <Loader /> )
-    const showError = () => ( error && <ErrorMessage message={ error} /> );
-    const showSuccess = () => ( success && <SuccessMessage message={success} /> );
 
     const forgotPasswordHtml = () => (
         <div className="login-wrapper">
@@ -75,13 +77,33 @@ const ForgotPassword = () => {
         </div>
     );
 
+    const onClose = () => {
+        setValues({...values, errorModal: false, error: ''});
+    }
+
     return (
         <Fragment>
             <Menu />
             { showLoader() }
-            { showError() }
-            { showSuccess() }
             { forgotPasswordHtml() }
+
+            { values.successModal && 
+                <SuccessModal
+                    title="Success"
+                    content= { values.success }
+                    redirectUrl= {`/signin`}
+                    isDisplay={values.successModal}
+                />
+            }
+
+            { values.errorModal && 
+                <ErrorModal
+                    title="Error"
+                    content= { values.error }
+                    isDisplay={values.errorModal}
+                    onSubmit={onClose}
+                />
+            }
         </Fragment>
     )
 };

@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Layout from '../../layout/Layout';
 import { getParentCategory, createCategory } from './api';
-import { SuccessMessage, ErrorMessage } from '../../message/messages';
 import { Loader } from '../../loader/loader';
+import SuccessModal from '../../modal/SuccessModal';
+import ErrorModal from '../../modal/ErrorModal';
 
 class AddCategory extends Component {
     state = {
@@ -12,7 +13,9 @@ class AddCategory extends Component {
         categories: [],
         loading: false,
         error: '',
-        success: ''
+        success: '',
+        errorModal: false,
+        successModal: false
     }
 
     user = this.props.user;
@@ -31,7 +34,7 @@ class AddCategory extends Component {
     getCategoryList = () => {
         getParentCategory(this.token).then(data => {
             if (!data) {
-                this.setState({error: data.error})
+                this.setState({errorModal: true, error: data.error})
             } else {
                 this.setState({ categories: data.result});
             }
@@ -59,7 +62,7 @@ class AddCategory extends Component {
         createCategory(data, token)
         .then(result => {
             if (result.error) {
-                this.setState({ loading: false, error: result.error });
+                this.setState({ loading: false, errorModal: true, error: result.error });
             } else {
                 this.setState({
                     name: '',
@@ -67,27 +70,21 @@ class AddCategory extends Component {
                     userId: '',
                     status: '',
                     loading: false,
-                    success: 'Category added successfully.'
+                    success: 'Category added successfully.',
+                    successModal: true
                 });
             }
         });
     };
 
     showLoader = () => ( this.state.loading && <Loader /> )
-    showError = () => ( this.state.error && <ErrorMessage message={ this.state.error} /> );
-    showSuccess = () => ( this.state.success && <SuccessMessage message={this.state.success} /> );
 
     AddCategoryHtml = () => {
         const {
             name,
             parent,
-            categories,
-            success,
+            categories
         } = this.state;
-
-        if (success) {
-            return <Redirect to="/admin/category" message={success} />;
-        }
 
         return (
             <Fragment>
@@ -107,8 +104,6 @@ class AddCategory extends Component {
                                 <div className="form-row">
                                     <div className="form-group col-md-6">
                                         { this.showLoader() }
-                                        { this.showError() }
-                                        { this.showSuccess() }
                                     </div>
                                 </div>
                                 <div className="form-row">
@@ -131,7 +126,7 @@ class AddCategory extends Component {
                                         </select>
                                     </div>
                                 </div>
-                                <button onClick={this.handleSubmit} type="submit" className="btn btn-primary">Add Order</button>
+                                <button onClick={this.handleSubmit} type="submit" className="btn btn-primary">Add</button>
                             </form>
                         </div>
                     </div>
@@ -140,10 +135,32 @@ class AddCategory extends Component {
         );
     }
 
+    onClose = () => {
+        this.setState({errorModal: false, error: ''});
+    }
+
     render() {
         return (
             <Layout>
                 {this.AddCategoryHtml()}
+
+                { this.state.successModal && 
+                    <SuccessModal
+                        title="Success"
+                        content= { this.state.success }
+                        redirectUrl= {`/admin/category`}
+                        isDisplay={this.state.successModal}
+                    />
+                }
+
+                { this.state.errorModal && 
+                    <ErrorModal
+                        title="Error"
+                        content= { this.state.error }
+                        isDisplay={this.state.errorModal}
+                        onSubmit={this.onClose}
+                    />
+                }
             </Layout>
         )
     }

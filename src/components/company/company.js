@@ -1,15 +1,17 @@
-import React, { useState, useEffect, Component } from 'react';
+import React, { useState, useEffect, Component, Fragment } from 'react';
 import Layout from '../layout/Layout';
-import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
 import { getCompany, updateCompany } from './api';
 import { arrayBufferToBase64 } from '../../utility/image';
+import ErrorModal from '../modal/ErrorModal';
+import SuccessModal from '../modal/SuccessModal';
 
 class Company extends Component {
     state = {
         name: '',
         companyType: '',
         website: '',
+        country: '',
         address: '',
         facebook: '',
         instagram: '',
@@ -21,27 +23,30 @@ class Company extends Component {
         formData: '',
         loading: false,
         error: '',
-        success: ''
+        success: '',
+        errorModal: false,
+        successModal: false
     }
 
     user = this.props.user;
     token = this.props.token;
 
     companyTypeList = [
-        {_id: 1, name: 'Exporter'},
-        {_id: 2, name: 'Importer'},
-        {_id: 3, name: 'Trader'},
+        { _id: 1, name: 'Exporter' },
+        { _id: 2, name: 'Importer' },
+        { _id: 3, name: 'Trader' },
     ];
 
     getUserCompany = () => {
         getCompany(this.token).then(data => {
-            if(data.error) {
-                this.setState({error: data.error, loading: false});
+            if (data.error) {
+                this.setState({ error: data.error, loading: false });
             } else {
                 this.setState({
                     loading: false,
                     name: data.name,
                     companyType: data.companyType,
+                    country: data.country,
                     userId: data.userId,
                     website: data.website,
                     address: data.address,
@@ -55,18 +60,20 @@ class Company extends Component {
                     formData: new FormData()
                 })
             }
+
         }).catch(error => {
             console.log(error)
-            this.setState({ error: 'Company not found.', loading: false})
+            this.setState({ error: 'Company not found.', loading: false })
         })
     }
 
     componentDidMount() {
         this.getUserCompany();
+        this.setState({ country: this.user.country })
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(prevState.success !== this.state.success) {
+        if (prevState.success !== this.state.success) {
             this.getUserCompany();
         }
     }
@@ -82,22 +89,21 @@ class Company extends Component {
         this.setState({ error: '', loading: true });
 
         this.state.formData.set('userId', this.user._id);
-        updateCompany( this.state.formData, this.token)
-        .then(result => {
-            if (result.error) {
-                this.setState({loading: false, error: result.error });
-            } else {
-                this.setState({
-                    loading: false,
-                    success: 'Company updated successfully.'
-                });
-            }
-        });
+        updateCompany(this.state.formData, this.token)
+            .then(result => {
+                if (result.error) {
+                    this.setState({ loading: false, errorModal: true, error: result.error });
+                } else {
+                    this.setState({
+                        loading: false,
+                        success: 'Company updated successfully.',
+                        successModal: true
+                    });
+                }
+            });
     };
 
-    showLoader = () => ( this.state.loading && <Loader /> )
-    showError = () => ( this.state.error && <ErrorMessage message={ this.state.error} /> );
-    showSuccess = () => ( this.state.success && <SuccessMessage message={this.state.success} /> );
+    showLoader = () => (this.state.loading && <Loader />)
 
     companyHtml = () => {
         const {
@@ -105,6 +111,7 @@ class Company extends Component {
             companyType,
             website,
             address,
+            country,
             facebook,
             instagram,
             twitter,
@@ -113,7 +120,7 @@ class Company extends Component {
             bio,
         } = this.state;
 
-        if(!this.user || !this.user._id) {
+        if (!this.user || !this.user._id) {
             return <div>Loading...</div>
         }
         // const { name, companyType, website, address, facebook, instagram, twitter, linkedIn, image, video, bio } = company;
@@ -134,15 +141,25 @@ class Company extends Component {
                         <form>
                             <div className="form-row">
                                 <div className="form-group col-md-6">
-                                    { this.showLoader() }
-                                    { this.showError() }
-                                    { this.showSuccess() }
+                                    {this.showLoader()}
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-md-6">
+                                    {/* <label htmlFor="inputEmail4">Logo</label> */}
+                                    {image && image.contentType && (
+                                        <img
+                                            height="35px"
+                                            src={`data:${image.contentType};base64,${arrayBufferToBase64(image.data.data)}`}
+                                            alt='company'
+                                        />
+                                    )}
                                 </div>
                             </div>
 
                             <div className="form-row">
                                 <div className="form-group col-md-6">
-                                    <label htmlFor="inputEmail4">Name</label>
+                                    <label htmlFor="inputEmail4">Company Name</label>
                                     <input type="text" onChange={this.handleChange('name')} className="form-control" value={name} />
                                 </div>
                                 <div className="form-group col-md-6">
@@ -163,12 +180,24 @@ class Company extends Component {
                                     <label htmlFor="inputEmail4">Website</label>
                                     <input type="text" onChange={this.handleChange('website')} className="form-control" value={website} />
                                 </div>
+
+                                <div className="form-group col-md-6">
+                                    <label htmlFor="inputPassword4">Bio</label>
+                                    <textarea rows={2} cols={10} className="form-control" onChange={this.handleChange('bio')} value={bio}></textarea>
+                                </div>
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group col-md-6">
+                                    <label htmlFor="inputPassword4">Country</label>
+                                    <input type="text" onChange={this.handleChange('country')} className="form-control" value={country} />
+                                </div>
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputEmail4">Address</label>
                                     <input type="text" onChange={this.handleChange('address')} className="form-control" value={address} />
                                 </div>
                             </div>
-                            
+
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputPassword4">Facebook</label>
@@ -191,25 +220,12 @@ class Company extends Component {
                                 </div>
                             </div>
 
-                            <div className="form-row">
-                                <div className="form-group col-md-12">
-                                    <label htmlFor="inputPassword4">Bio</label>
-                                    <textarea rows={2} cols={10} className="form-control" onChange={this.handleChange('bio')} value={bio}></textarea>
-                                </div>
-                            </div>
 
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label className="btn btn-secondary">
                                         <input onChange={this.handleChange('image')} type="file" name="image" accept="image/*" />
                                     </label>
-                                    { image && image.contentType && (
-                                        <img 
-                                            height="35px"
-                                            src={`data:${image.contentType};base64,${arrayBufferToBase64(image.data.data)}`} 
-                                            alt='product' 
-                                        />
-                                    )}
                                 </div>
                                 {/* <div className="form-group col-md-6">
                                     <label className="btn btn-secondary">
@@ -226,10 +242,34 @@ class Company extends Component {
         )
     }
 
+    onClose = () => {
+        this.setState({errorModal: false, error: ''});
+    }
+
     render() {
         return (
             <Layout>
-                { this.companyHtml() }
+                <Fragment>
+                    { this.companyHtml()}
+                        { this.state.successModal && 
+                        <SuccessModal
+                            title="Success"
+                            content= { this.state.success }
+                            redirectUrl= {`/`}
+                            isDisplay={this.state.successModal}
+                        />
+                    }
+
+                    { this.state.errorModal && 
+                        <ErrorModal
+                            title="Error"
+                            content= { this.state.error }
+                            isDisplay={this.state.errorModal}
+                            onSubmit={this.onClose}
+                        />
+                    }
+                </Fragment>
+                
             </Layout>
         )
     };

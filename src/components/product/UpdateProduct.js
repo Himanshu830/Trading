@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import { getCategories, getProductById, updateProduct } from './api';
-import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
 import { arrayBufferToBase64 } from '../../utility/image';
+import SuccessModal from '../modal/SuccessModal';
+import ErrorModal from '../modal/ErrorModal';
 
 class UpdateProduct extends Component {
     state = {
@@ -20,9 +21,11 @@ class UpdateProduct extends Component {
         deliveryTime: '',
         image: '',
         loading: false,
-        error: '',
-        success: '',
-        formData: ''
+        error: false,
+        success: false,
+        formData: '',
+        errorModal: false,
+        successModal: false
     }
 
     user = this.props.user;
@@ -85,19 +88,18 @@ class UpdateProduct extends Component {
         updateProduct(this.productId, this.state.formData, this.token)
         .then(result => {
             if (result.error) {
-                this.setState({ loading: false, error: result.error });
+                this.setState({ loading: false, errorModal: true, error: result.error });
             } else {
                 this.setState({
                     loading: false,
-                    success: 'Product updated successfully.'
+                    success: 'Product updated successfully.',
+                    successModal: true
                 });
             }
         });
     };
     
     showLoader = () => ( this.state.loading && <Loader /> )
-    showError = () => ( this.state.error && <ErrorMessage message={ this.state.error} /> );
-    showSuccess = () => ( this.state.success && <SuccessMessage message={this.state.success} /> );
 
     updateProductHtml = () => {
         const {
@@ -111,16 +113,8 @@ class UpdateProduct extends Component {
             minQuantity,
             packagingDetail,
             deliveryTime,
-            image,
-            loading,
-            error,
-            success,
-            formData
+            image
         } = this.state;
-
-        if (success) {
-            return <Redirect to="/product" message={success} />;
-        }
 
         return (
             <Fragment>
@@ -141,8 +135,6 @@ class UpdateProduct extends Component {
                                 <div className="form-row">
                                     <div className="form-group col-md-6">
                                         { this.showLoader() }
-                                        { this.showError() }
-                                        { this.showSuccess() }
                                     </div>
                                 </div>
                                 <div className="form-row">
@@ -216,14 +208,9 @@ class UpdateProduct extends Component {
                                         />
                                         )}
                                     </div>
-                                    {/* <div className="form-group col-md-6">
-                                        <label className="btn btn-secondary">
-                                            <input onChange={this.handleChange('image')} type="file" name="image" accept="image/*" />
-                                        </label>             
-                                    </div> */}
                                 </div>
 
-                                <button onClick={this.handleSubmit} type="submit" className="btn btn-primary">Add Product</button>
+                                <button onClick={this.handleSubmit} type="submit" className="btn btn-primary">Update</button>
                             </form>
                         </div>
                     </div>
@@ -232,10 +219,32 @@ class UpdateProduct extends Component {
         );
     }
 
+    onClose = () => {
+        this.setState({errorModal: false, error: ''});
+    }
+
     render() {
         return (
             <Layout>
                 {this.updateProductHtml()}
+
+                { this.state.successModal && 
+                    <SuccessModal
+                        title="Success"
+                        content= { this.state.success }
+                        redirectUrl= {`/product`}
+                        isDisplay={this.state.successModal}
+                    />
+                }
+
+                { this.state.errorModal && 
+                    <ErrorModal
+                        title="Error"
+                        content= { this.state.error }
+                        isDisplay={this.state.errorModal}
+                        onSubmit={this.onClose}
+                    />
+                }
             </Layout>
         );
     }

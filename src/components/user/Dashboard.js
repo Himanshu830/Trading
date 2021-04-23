@@ -15,18 +15,6 @@ const Dashboard = ({ user, token }) => {
 
     const { name, email, country, role } = user;
 
-    const countryList = [
-        {_id: 1, name: 'India'},
-        {_id: 2, name: 'USA'},
-        {_id: 3, name: 'Canada'},
-        {_id: 4, name: 'UK'}
-    ];
-    
-    const getCountryName = (id) => {
-        let country = countryList.find(country => country._id === parseInt(id));
-        return (country && country.name) ? country.name : '';
-    }
-
     const dashboardHtml = () => {
         return (
             <div className="col-sm-9">
@@ -43,8 +31,7 @@ const Dashboard = ({ user, token }) => {
                         <ul className="list-group">
                             <li className="list-group-item"><b>Name</b>: {name}</li>
                             <li className="list-group-item"><b>Email</b>: {email}</li>
-                            <li className="list-group-item"><b>Company</b>: {companyName}</li>
-                            <li className="list-group-item"><b>Country</b>: {getCountryName(country)}</li>
+                            <li className="list-group-item"><b>Country</b>: {country}</li>
                             <li className="list-group-item">
                                 <b>Role</b>: {role === 1 ? "Admin" : "Registered User"}
                             </li>

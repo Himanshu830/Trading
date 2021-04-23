@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Layout from '../layout/Layout';
-import { getProductById } from './api';
+import { Link, Redirect } from 'react-router-dom'
+import { getProductById, deleteProduct } from './api';
 import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
 import { arrayBufferToBase64 } from '../../utility/image';
@@ -15,6 +16,7 @@ import {
     LinkedinIcon,
     TwitterIcon,
     } from "react-share";
+import Modal from '../modal/Modal';
 
 class ViewProduct extends Component {
     state = {
@@ -29,7 +31,8 @@ class ViewProduct extends Component {
         image: '',
         loading: false,
         error: '',
-        success: ''
+        success: '',
+        redirect: false
     }
 
     productId = this.props.match.params.productId;
@@ -73,10 +76,15 @@ class ViewProduct extends Component {
             minQuantity,
             packagingDetail,
             deliveryTime,
+            redirect,
             image,
         } = this.state;
 
         const { user } = isAuthenticated();
+
+        if(redirect) {
+            return <Redirect to="/product" />;
+        }
 
         if (user) {
             return (
@@ -161,7 +169,24 @@ class ViewProduct extends Component {
                                         { this.socialShareButton() }
                                     </div>
                                 </li>
+
+                                <li className="list-group-item">
+                                    <div className="row">
+                                         <div className="col-sm-2">
+                                             <Link to={`/product/update/${this.productId}`} type="button" className="btn btn-sm btn-outline-primary">Update</Link>
+                                         </div>
+                                         <div className="col-sm-2">
+                                         <button onClick={() => this.setState({ id: this.productId, productName: this.state.name })} className="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#exampleModalLong">Delete</button>
+                                         </div>
+                                    </div>
+                                </li>
                             </ul>
+                            
+
+                           
+                            {/* <Link to={`/product/update/${product._id}`} type="button" className="btn btn-sm btn-outline-primary">Update</Link>
+
+                            <button onClick={() => this.setState({ id: product._id, productName: product.name })} className="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#exampleModalLong">Delete</button> */}
                         </div>
                     </div>
                 </Layout>
@@ -289,8 +314,28 @@ class ViewProduct extends Component {
                         <TwitterIcon size={36} />
                     </TwitterShareButton>
                 </div>
+
+                <Modal
+                    title="Product Delete"
+                    content={(this.state.productName) ? `Are you sure you want to delete product ${this.state.productName}?` : 'Are you sure you want to delete this product?'}
+                    onSubmit={() => this.onProductDelete()}
+                    onCancel={() => { }}
+                />
             </Fragment>
         )
+    }
+
+    onProductDelete = () => {
+        this.setState({ loading: true });
+        deleteProduct(this.state.id, this.props.token).then(result => {
+            if (result.error) {
+                this.setState({ redirect: true, loading: false, error: result.error })
+            } else {
+                this.setState({ redirect: true, loading: false, success: 'Product deleted successfully.' })
+            }
+        }).catch(error => {
+            this.setState({ id: '', productName: '', loading: false, error });
+        })
     }
 
     render() {

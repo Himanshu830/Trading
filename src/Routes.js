@@ -26,6 +26,7 @@ import UpdateProduct from './components/product/UpdateProduct';
 
 import Order from './components/order/Order';
 import AddOrder from './components/order/AddOrder';
+import ViewOrder from './components/order/ViewOrder'
 import UpdateOrder from './components/order/UpdateOrder';
 
 import AdminDashboard from './components/admin/AdminDashboard';
@@ -53,11 +54,12 @@ const Routes = () => {
 
                 <PrivateRoute path="/product" exact component={Product} />
                 <PrivateRoute path="/product/new" exact component={AddProduct} />
-                <Route path="/product/:productId" exact component={ViewProduct} />
+                <PrivateRoute path="/product/:productId" exact component={ViewProduct} />
                 <PrivateRoute path="/product/update/:productId" exact component={UpdateProduct} />
 
                 <PrivateRoute path="/order" exact component={Order} />
                 <PrivateRoute path="/order/new" exact component={AddOrder} />
+                <PrivateRoute path="/order/:orderId" exact component={ViewOrder} />
                 <PrivateRoute path="/order/update/:orderId" exact component={UpdateOrder} />
 
                 <AdminRoute path="/admin/dashboard" exact component={AdminDashboard} />

@@ -53,16 +53,20 @@ class Order extends Component {
             return (
                 <tr key={order._id}>
                     <th scope="row">{key + 1}</th>
-                    <td>{order.title}</td>
+                    <td>
+                    {/* <Link to={`/order/update/${order._id}`} > {order.title}</Link> */}
+                    <Link to={`/order/${order._id}`}>{order.title}</Link>
+                       
+                    </td>
                     <td>{order.budget}</td>
                     <td>{categoryName}</td>
                     <td>{subCategoryName}</td>
-                    <td className="text-center">
+                    {/* <td className="text-center">
                         <Link to={`/order/update/${order._id}`} type="button" className="btn btn-sm btn-outline-primary">Update</Link>
-                    </td>
-                    <td className="text-center">
+                    </td> */}
+                    {/* <td className="text-center">
                         <button onClick={() => this.setState({id: order._id, orderTitle: order.title}) } className="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#exampleModalLong">Delete</button>
-                    </td>
+                    </td> */}
                 </tr>
             )
         })
@@ -95,8 +99,8 @@ class Order extends Component {
                                     <th scope="col">Budget</th>
                                     <th scope="col">Category</th>
                                     <th scope="col">Sub-category</th>
-                                    <th scope="col">Update</th>
-                                    <th scope="col">Delete</th>
+                                    {/* <th scope="col">Update</th> */}
+                                    {/* <th scope="col">Delete</th> */}
                                 </tr>
                             </thead>
                             <tbody>{ this.orderListHtml() }</tbody>
@@ -115,7 +119,6 @@ class Order extends Component {
     onOrderDelete = () => {
         this.setState({loading: true});
         deleteOrder(this.state.id, this.props.token).then(result => {
-            console.log(result)
             if(result.error) {
                 console.log('setting error...')
                 this.setState({ redirect: true, loading: false, error: result.error})

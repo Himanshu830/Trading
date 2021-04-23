@@ -246,3 +246,8 @@ export const CountryList = {
    'Zambia': 'Zambia',
    'Zimbabwe': 'Zimbabwe'
 }
+
+export const ORDER_TYPE = {
+   'Sell': 'Sell',
+   'Buy': 'Buy'
+}

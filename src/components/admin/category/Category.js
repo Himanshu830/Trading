@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import Search from '../../search/Search';
 import Layout from '../../layout/Layout';
 import { getCategory, deleteCategory } from './api';
-import { SuccessMessage, ErrorMessage } from '../../message/messages';
 import { Loader } from '../../loader/loader';
 import Modal from '../../modal/Modal';
+import SuccessModal from '../../modal/SuccessModal';
+import ErrorModal from '../../modal/ErrorModal';
 
 class Category extends Component {
     state = {
@@ -15,18 +16,20 @@ class Category extends Component {
         loading: false,
         error: '',
         redirect: false,
-        success: ''
+        success: false,
+        errorModal: false,
+        successModal: false
     }
 
     getCategories = (term) => {
         getCategory(this.props.token, term).then(data => {
             if (data.error) {
-                this.setState({ loading: false, error: data.error });
+                this.setState({ loading: false, errorModal: true, error: data.error });
             } else {
                 this.setState({  loading: false, categories: data.result });
             }
         }).catch(error => {
-            this.setState({ error: 'Something went wrong', loading: false})
+            this.setState({ errorModal: true, error: 'Something went wrong', loading: false})
         });
     }
 
@@ -43,8 +46,6 @@ class Category extends Component {
     }
 
     showLoader = () => ( this.state.loading && <Loader /> )
-    showError = () => ( this.state.error && <ErrorMessage message={ this.state.error} /> );
-    showSuccess = () => ( this.state.success && <SuccessMessage message={ this.state.success } /> );
 
     categoryListHtml = () => {
         return this.state.categories.map((category, key) => {
@@ -83,8 +84,6 @@ class Category extends Component {
 
                     <div className="card-body table-sm">
                         { this.showLoader() }
-                        { this.showError() }
-                        { this.showSuccess() }
                         <table className="table table-bordered">
                             <thead>
                                 <tr>
@@ -119,8 +118,12 @@ class Category extends Component {
                 this.setState({ redirect: true, loading: false, success: 'Category deleted successfully.'})
             }
         }).catch(error => {
-            this.setState({ id: '', loading: false, error });
+            this.setState({ id: '', loading: false, errorModal: true, error });
         })
+    }
+
+    onClose = () => {
+        this.setState({errorModal: false, error: ''});
     }
 
     render() {
@@ -133,6 +136,23 @@ class Category extends Component {
                     onSubmit={() => this.onOrderDelete() }
                     onCancel={() => {}}
                 />
+                { this.state.successModal && 
+                    <SuccessModal
+                        title="Success"
+                        content= { this.state.success }
+                        redirectUrl= {`/admin/category`}
+                        isDisplay={this.state.successModal}
+                    />
+                }
+
+                { this.state.errorModal && 
+                    <ErrorModal
+                        title="Error"
+                        content= { this.state.error }
+                        isDisplay={this.state.errorModal}
+                        onSubmit={this.onClose}
+                    />
+                }
             </Layout>
         )
     }

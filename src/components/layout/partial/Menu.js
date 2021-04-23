@@ -91,7 +91,7 @@ const Menu = ({ history }) => {
                             style={{ cursor: "pointer", color: "#ffffff" }}
                             onClick={() =>
                                 signout(() => {
-                                    history.push("/");
+                                    history.push("/signin");
                                 })
                             }
                         >

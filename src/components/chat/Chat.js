@@ -6,9 +6,10 @@ import ChatForm from './ChatForm';
 import { getUsers, getChats } from './apiChat';
 import io from 'socket.io-client';
 import MessageList from './MessageList';
-import Menu from '../layout/partial/Menu';
+import Sidebar from '../layout/partial/Sidebar';
 
-// import './chat.css';
+ import './chat.css';
+import Layout from '../layout/Layout';
 
 class Chat extends Component {
     state = { loading: false, token: null, search: '', profile: {}, users: [], selectedUserId: undefined, selectedUser: {}, messages: []}
@@ -138,22 +139,40 @@ class Chat extends Component {
         // );
 
         return (
-            <Fragment>
-                <Menu />
-                <div className="chat-wrapper">
-                    <div id="chat-container">
-                        <Search searchUser={this.searchUser} />
-                        <UserList 
-                            selectedUserId={this.state.selectedUserId}
-                            users={this.state.users} 
-                            userSelect={this.onUserSelect}
-                            loading={this.state.loading}
-                        />
-                        { this.renderMessageList() }
-                        { this.renderChatForm()  } 
-                    </div>
-                </div>                
-            </Fragment>
+            <Layout>
+                <div className="col-sm-9">
+                        <div id="chat-container">
+                            <Search searchUser={this.searchUser} />
+                            <UserList 
+                                selectedUserId={this.state.selectedUserId}
+                                users={this.state.users} 
+                                userSelect={this.onUserSelect}
+                                loading={this.state.loading}
+                            />
+                            { this.renderMessageList() }
+                            { this.renderChatForm()  } 
+                        </div>
+                </div>
+            </Layout>
+
+
+
+            // <Fragment>
+            //     <Menu />
+            //     <div className="chat-wrapper">
+            //         <div id="chat-container">
+            //             <Search searchUser={this.searchUser} />
+            //             <UserList 
+            //                 selectedUserId={this.state.selectedUserId}
+            //                 users={this.state.users} 
+            //                 userSelect={this.onUserSelect}
+            //                 loading={this.state.loading}
+            //             />
+            //             { this.renderMessageList() }
+            //             { this.renderChatForm()  } 
+            //         </div>
+            //     </div>                
+            // </Fragment>
         );
     }
 }

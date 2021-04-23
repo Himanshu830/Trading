@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import Search from '../search/Search';
 import Layout from '../layout/Layout';
 import { getProductsByUser, deleteProduct } from './api';
-import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
 import Modal from '../modal/Modal';
 import { arrayBufferToBase64 } from '../../utility/image';
@@ -24,21 +23,21 @@ class Product extends Component {
             if (data.error) {
                 this.setState({ loading: false, error: data.error });
             } else {
-                this.setState({  loading: false, product: data.result });
+                this.setState({ loading: false, product: data.result });
             }
         }).catch(error => {
-            this.setState({ error: 'Something went wrong', loading: false})
+            this.setState({ error: 'Something went wrong', loading: false })
         });
     }
 
     componentDidMount() {
-        this.setState({loading: true})
+        this.setState({ loading: true })
         this.getProducts()
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(this.state.redirect !== prevState.redirect) {
-            this.setState({loading: true})
+        if (this.state.redirect !== prevState.redirect) {
+            this.setState({ loading: true })
             this.getProducts()
         }
     }
@@ -49,25 +48,23 @@ class Product extends Component {
     }
 
     onProductDelete = () => {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         deleteProduct(this.state.id, this.props.token).then(result => {
-            if(result.error) {
-                this.setState({ redirect: true, loading: false, error: result.error})
+            if (result.error) {
+                this.setState({ redirect: true, loading: false, error: result.error })
             } else {
-                this.setState({ redirect: true, loading: false, success: 'Product deleted successfully.'})
+                this.setState({ redirect: true, loading: false, success: 'Product deleted successfully.' })
             }
         }).catch(error => {
             this.setState({ id: '', productName: '', loading: false, error });
         })
     }
 
-    showLoader = () => ( this.state.loading && <Loader /> )
-    showError = () => ( this.state.error && <ErrorMessage message={ this.state.error} /> );
-    showSuccess = () => ( this.state.success && <SuccessMessage message={ this.state.success } /> );
+    showLoader = () => (this.state.loading && <Loader />)
 
     productListHtml = () => {
-        let {product} = this.state;
-        if(!product) {
+        let { product } = this.state;
+        if (!product) {
             return '';
         }
         return product.map((product, key) => {
@@ -76,27 +73,29 @@ class Product extends Component {
             return (
                 <tr key={product._id}>
                     <th scope="row">{key + 1}</th>
-                    <td>{product.name}</td>
                     <td>
-                        <img 
+                        <Link to={`/product/${product._id}`}>{product.name}</Link>
+                    </td>
+                    <td>
+                        <img
                             height="35px"
-                            src={`data:${product.image.contentType};base64,${arrayBufferToBase64(product.image.data.data)}`} 
-                            alt='product' 
+                            src={`data:${product.image.contentType};base64,${arrayBufferToBase64(product.image.data.data)}`}
+                            alt='product'
                         />
                     </td>
                     <td>{categoryName}</td>
                     <td>{subCategoryName}</td>
                     <td>{product.minQuantity}</td>
                     <td>{product.unitPrice}</td>
-                    <td className="text-center">
+                    {/* <td className="text-center">
                         <Link to={`/product/${product._id}`} type="button" className="btn btn-sm btn-outline-primary">View</Link>
-                    </td>
-                    <td className="text-center">
+                    </td> */}
+                    {/* <td className="text-center">
                         <Link to={`/product/update/${product._id}`} type="button" className="btn btn-sm btn-outline-primary">Update</Link>
                     </td>
                     <td className="text-center">
-                        <button onClick={() => this.setState({id: product._id, productName: product.name}) } className="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#exampleModalLong">Delete</button>
-                    </td>
+                        <button onClick={() => this.setState({ id: product._id, productName: product.name })} className="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#exampleModalLong">Delete</button>
+                    </td> */}
                 </tr>
             )
         })
@@ -118,9 +117,7 @@ class Product extends Component {
                     </nav>
 
                     <div className="card-body table-sm">
-                        { this.showLoader() }
-                        { this.showError() }
-                        { this.showSuccess() }
+                        {this.showLoader()}
                         <table className="table table-bordered">
                             <thead>
                                 <tr>
@@ -131,10 +128,10 @@ class Product extends Component {
                                     <th scope="col">Sub-category</th>
                                     <th scope="col">Min Qty.</th>
                                     <th scope="col">Unit Price</th>
-                                    <th scope="col" colSpan="3" style={{textAlign:"center"}}>Action</th>
+                                    {/* <th scope="col" colSpan="3" style={{ textAlign: "center" }}>Action</th> */}
                                 </tr>
                             </thead>
-                            <tbody>{ this.productListHtml() }</tbody>
+                            <tbody>{this.productListHtml()}</tbody>
                         </table>
                     </div>
                 </div>
@@ -145,12 +142,12 @@ class Product extends Component {
     render() {
         return (
             <Layout>
-                { this.productHtml() }
-                <Modal 
+                { this.productHtml()}
+                <Modal
                     title="Product Delete"
-                    content= { (this.state.productName) ? `Are you sure you want to delete product ${this.state.productName}?` : 'Are you sure you want to delete this product?'}
-                    onSubmit={() => this.onProductDelete() }
-                    onCancel={() => {}}
+                    content={(this.state.productName) ? `Are you sure you want to delete product ${this.state.productName}?` : 'Are you sure you want to delete this product?'}
+                    onSubmit={() => this.onProductDelete()}
+                    onCancel={() => { }}
                 />
             </Layout>
         )

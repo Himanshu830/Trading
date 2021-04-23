@@ -15,13 +15,6 @@ class Users extends Component {
         success: ''
     }
 
-    countryList = [
-        {_id: 1, name: 'India'},
-        {_id: 2, name: 'USA'},
-        {_id: 3, name: 'Canada'},
-        {_id: 4, name: 'UK'}
-    ];
-
     getUsers = () => {
         listUsers(this.props.token).then(data => {
             if (data.error) {
@@ -37,11 +30,6 @@ class Users extends Component {
     componentDidMount() {
         this.setState({loading: true})
         this.getUsers()
-    }
-
-    getCountryName = (id) => {
-        let country = this.countryList.find(country => country._id === parseInt(id));
-        return (country && country.name) ? country.name : '';
     }
 
     // componentDidUpdate(prevProps, prevState) {
@@ -62,8 +50,7 @@ class Users extends Component {
                     <th scope="row">{key + 1}</th>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
-                    <td>{user.company}</td>
-                    <td>{this.getCountryName(user.country)}</td>
+                    <td>{user.country}</td>
                     
                     {/* <td className="text-center">
                         <Link to={`/order/update/${order._id}`} type="button" className="btn btn-sm btn-outline-primary">Update</Link>
@@ -101,7 +88,6 @@ class Users extends Component {
                                     <th scope="col">#</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">email</th>
-                                    <th scope="col">Company</th>
                                     <th scope="col">Country</th>
                                     {/* <th scope="col">Update</th>
                                     <th scope="col">Delete</th> */}

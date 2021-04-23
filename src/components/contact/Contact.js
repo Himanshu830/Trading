@@ -3,6 +3,8 @@ import Menu from '../layout/partial/Menu';
 import { contactUs } from './api';
 import { getCompany } from '../company/api';
 import { isAuthenticated } from "../auth/api";
+import SuccessModal from '../modal/SuccessModal';
+import ErrorModal from '../modal/ErrorModal';
 import { SuccessMessage, ErrorMessage } from '../message/messages';
 import { Loader } from '../loader/loader';
 
@@ -14,7 +16,9 @@ class Contact extends Component {
         userId: '',
         loading: false,
         error: '',
-        success: false
+        success: false,
+        errorModal: false,
+        successModal: false
     }
 
     componentDidMount() {
@@ -42,10 +46,22 @@ class Contact extends Component {
                     message: '',
                     error: '',
                     success: 'Thank you for contacting us. We will get back to you shortly.',
+                    successModal: true
                 });
             }
         });
     };
+
+    handleReset = (event) =>{
+        event.preventDefault()
+        this.setState({
+            subject: '',
+            message: '',
+            loading: false,
+            error: '',
+            success: false
+        })
+    }
 
     showLoader = () => (this.state.loading && <Loader />)
     showError = () => (this.state.error && <ErrorMessage message={this.state.error} />);
@@ -94,6 +110,10 @@ class Contact extends Component {
                             <button onClick={this.handleSubmit} className="btn btn-primary">
                                 Submit
                             </button>
+                            &nbsp;&nbsp;&nbsp;
+                            <button onClick={this.handleReset} className="btn btn-danger">
+                                Clear
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -106,9 +126,27 @@ class Contact extends Component {
             <Fragment>
                 <Menu />
                 { this.showLoader() }
-                { this.showError() }
-                { this.showSuccess() }
+                {/* { this.showError() }
+                { this.showSuccess() } */}
                 {this.contactHtml()}
+
+                { this.state.successModal && 
+                    <SuccessModal
+                        title="Success"
+                        content= { this.state.success }
+                        redirectUrl= {`/`}
+                        isDisplay={this.state.successModal}
+                    />
+                }
+
+                { this.state.errorModal && 
+                    <ErrorModal
+                        title="Error"
+                        content= { this.state.error }
+                        isDisplay={this.state.errorModal}
+                        onSubmit={this.onClose}
+                    />
+                }
             </Fragment>
         )
     }

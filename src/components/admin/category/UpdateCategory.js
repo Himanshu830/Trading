@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Layout from '../../layout/Layout';
 import { getCategoryById, getParentCategory, updateCategory } from './api';
-import { SuccessMessage, ErrorMessage } from '../../message/messages';
 import { Loader } from '../../loader/loader';
+import SuccessModal from '../../modal/SuccessModal';
+import ErrorModal from '../../modal/ErrorModal';
 
 class UpdateCategory extends Component {
     state = {
@@ -11,8 +12,10 @@ class UpdateCategory extends Component {
         parent: '',
         categories: [],
         loading: false,
-        error: '',
-        success: ''
+        error: false,
+        success: false,
+        errorModal: false,
+        successModal: false
     }
 
     user = this.props.user;
@@ -64,35 +67,27 @@ class UpdateCategory extends Component {
         updateCategory(this.categoryId, data, this.token)
         .then(result => {
             if (result.error) {
-                this.setState({ loading: false, error: result.error });
+                this.setState({ loading: false, errorModal: true, error: result.error });
             } else {
                 this.setState({
                     name: '',
                     parent: '',
                     loading: false,
-                    success: 'Category udpated successfully.'
+                    success: 'Category udpated successfully.',
+                    successModal: true
                 });
             }
         });
     };
 
     showLoader = () => ( this.state.loading && <Loader /> )
-    showError = () => ( this.state.error && <ErrorMessage message={ this.state.error} /> );
-    showSuccess = () => ( this.state.success && <SuccessMessage message={this.state.success} /> );
 
     updateCategoryHtml = () => {
         const {
             name,
             parent,
-            categories,
-            loading,
-            error,
-            success,
+            categories
         } = this.state;
-
-        if (success) {
-            return <Redirect to="/admin/category" message={success} />;
-        }
 
         return (
             <Fragment>
@@ -112,8 +107,6 @@ class UpdateCategory extends Component {
                                 <div className="form-row">
                                     <div className="form-group col-md-6">
                                         { this.showLoader() }
-                                        { this.showError() }
-                                        { this.showSuccess() }
                                     </div>
                                 </div>
                                 <div className="form-row">
@@ -145,10 +138,32 @@ class UpdateCategory extends Component {
         );
     }
 
+    onClose = () => {
+        this.setState({errorModal: false, error: ''});
+    }
+
     render() {
         return (
             <Layout>
                 {this.updateCategoryHtml()}
+
+                { this.state.successModal && 
+                    <SuccessModal
+                        title="Success"
+                        content= { this.state.success }
+                        redirectUrl= {`/admin/category`}
+                        isDisplay={this.state.successModal}
+                    />
+                }
+
+                { this.state.errorModal && 
+                    <ErrorModal
+                        title="Error"
+                        content= { this.state.error }
+                        isDisplay={this.state.errorModal}
+                        onSubmit={this.onClose}
+                    />
+                }
             </Layout>
         )
     }
