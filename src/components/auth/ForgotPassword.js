@@ -18,7 +18,7 @@ const ForgotPassword = () => {
         successModal: false
     });
 
-    const { email, loading, error, success } = values;
+    const { email, loading } = values;
 
     const handleChange = name => event => {
         setValues({ ...values, error: false, [name]: event.target.value });

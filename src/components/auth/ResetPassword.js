@@ -19,7 +19,7 @@ const ResetPassword = ({match}) => {
     });
 
     const { token } = match.params;
-    const { password, confirmPassword, loading, error, success } = values;
+    const { password, confirmPassword, loading } = values;
 
     useEffect(() => {
         reset(token).then(data => {
@@ -35,13 +35,13 @@ const ResetPassword = ({match}) => {
 
     const validatePassword = () => {
         if(password !== confirmPassword) {
-            setValues({ ...values, error: 'Password and confirm password must be same'})
+            setValues({ ...values, errorModal: true, error: 'Password and confirm password must be same'})
             return false;
-        } else if( password.length < 7) {
-            setValues({ ...values, error: 'Password must be atleast 7 character.'})
+        } else if( password.length < 6) {
+            setValues({ ...values, errorModal: true, error: 'Password must be atleast 6 character.'})
             return false;
         } else if (password.search(/[0-9]/) < 0) {
-            setValues({ ...values, error: 'Password must contain a number'})
+            setValues({ ...values, errorModal: true, error: 'Password must contain a number'})
             return false;
         }
 
