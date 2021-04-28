@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, Component } from 'react';
 import Menu from '../layout/partial/Menu';
 import { activateAccount } from '../auth/api';
 import { Loader } from '../loader/loader';
@@ -7,61 +7,63 @@ import ErrorModal from '../modal/ErrorModal';
 
 import './auth.css';
 
-const AccountActivation = ({match}) => {
-    const [values, setValues] = useState({
+class AccountActivation extends Component {
+    state = {
         loading: false,
         error: '',
-        success: '',
+        success: false,
         errorModal: false,
         successModal: false
-    });
+    }
 
-    const { token } = match.params;
-    useEffect(() => {
-        // setValues({ ...values, loading: false, success: 'Your account has been activated. Please Singin.' });
-
+    componentDidMount() {
+        const { token } = this.props.match.params;
         activateAccount(token).then(data => {
+            console.log(data)
             if (data.error) {
-                setValues({ ...values, loading: false, errorModal: true, error: data.error });
+                this.setState({ loading: false, errorModal: true, error: data.error });
             } else {
-                setValues({ ...values, loading: false, successModal: true, success: 'Your account has been activated. Please Singin.' });
+                this.setState({ loading: false, successModal: true, success: 'Your account has been activated. Please Singin.' });
             }
         }).catch(err => {
             console.log(err)
-            setValues({ ...values, loading: false, errorModal: true, error: err.message });
+            this.setState({ loading: false, errorModal: true, error: err.message });
         });
-    }, []);
-
-    const showLoader = () => ( values.loading && <Loader /> )
-
-    const onClose = () => {
-        setValues({...values, errorModal: false, error: ''});
     }
 
-    return (
-        <Fragment>
-            <Menu />
-            { showLoader() }
+    showLoader = () => ( this.state.loading && <Loader /> )
 
-            { values.successModal && 
-                <SuccessModal
-                    title="Success"
-                    content= { values.success }
-                    redirectUrl= {`/signin`}
-                    isDisplay={values.successModal}
-                />
-            }
+    onClose = () => {
+        this.setState({errorModal: false, error: ''});
+    }
 
-            { values.errorModal && 
-                <ErrorModal
-                    title="Error"
-                    content= { values.error }
-                    isDisplay={values.errorModal}
-                    onSubmit={onClose}
-                />
-            }
-        </Fragment>
-    )
-};
+    render() {
+        const { errorModal, successModal, error, success } = this.state
+        return (
+            <Fragment>
+                <Menu />
+                { this.showLoader() }
+
+                { successModal && 
+                    <SuccessModal
+                        title="Success"
+                        content= { success }
+                        redirectUrl= {`/signin`}
+                        isDisplay={successModal}
+                    />
+                }
+
+                { errorModal && 
+                    <ErrorModal
+                        title="Error"
+                        content= { error }
+                        isDisplay={errorModal}
+                        onSubmit={this.onClose}
+                    />
+                }
+            </Fragment>
+        )
+    }
+}
 
 export default AccountActivation;
