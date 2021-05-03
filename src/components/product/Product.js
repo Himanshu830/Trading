@@ -76,13 +76,6 @@ class Product extends Component {
                     <td>
                         <Link to={`/product/${product._id}`}>{product.name}</Link>
                     </td>
-                    <td>
-                        <img
-                            height="35px"
-                            src={`data:${product.image.contentType};base64,${arrayBufferToBase64(product.image.data.data)}`}
-                            alt='product'
-                        />
-                    </td>
                     <td>{categoryName}</td>
                     <td>{subCategoryName}</td>
                     <td>{product.minQuantity}</td>
@@ -123,7 +116,6 @@ class Product extends Component {
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Image</th>
                                     <th scope="col">Category</th>
                                     <th scope="col">Sub-category</th>
                                     <th scope="col">Min Qty.</th>

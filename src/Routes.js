@@ -12,6 +12,8 @@ import Home from './components/Home';
 import About from './components/pages/About';
 import Dashboard from './components/user/Dashboard';
 import Profile from './components/user/Profile';
+import EmailVerification from './components/user/EmailVarification';
+import UpdateProfile from './components/user/UpdateProfile';
 import Company from './components/company/company';
 import Contact from './components/contact/Contact';
 
@@ -47,8 +49,11 @@ const Routes = () => {
                 <Route path='/about' exact component={About} />
                 <Route path='/contact' exact component={Contact} />
 
+                <Route path='/verify/:email/:token' exact component={EmailVerification} />
+
                 <PrivateRoute path="/user/dashboard" exact component={Dashboard} />
                 <PrivateRoute path="/profile" exact component={Profile} />
+                <PrivateRoute path="/profile/:userId" exact component={UpdateProfile} />
                 <PrivateRoute path="/company" exact component={Company} />
 
 

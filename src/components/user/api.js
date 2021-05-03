@@ -59,3 +59,18 @@ export const updateUser = (user, next) => {
         }
     }
 };
+
+export const verifyEmail = (email, token) => {
+    return fetch(`${API}/verify/${email}/${token}`, {
+        method: 'GET',
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        }          
+    })
+        .then(response => {
+            console.log('account activation: ', response);
+            return response.json();
+        })
+        .catch(err => console.log(err));
+}

@@ -1,63 +1,14 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React from 'react';
+import { Redirect, Link } from "react-router-dom";
 import Layout from '../layout/Layout';
-import { Loader } from '../loader/loader';
-import { update, updateUser } from '../user/api';
-import { CountryList } from '../constant';
-import ErrorModal from '../modal/ErrorModal';
-import SuccessModal from '../modal/SuccessModal';
-
 const Profile = ({ user, token }) => {
 
-    const [values, setValues] = useState({
-        name: '',
-        email: '',
-        password: '',
-        country: '',
-        loading: false,
-        error: '',
-        success: '',
-        errorModal: false,
-        successModal: false
-    });
-
-    useEffect(() => {
-        setValues({ ...values, ...user})
-    }, []);
-
-    const { name, email, password, country, loading, error, success } = values;
-
-    const handleChange = name => e => {
-        setValues({ ...values, [name]: e.target.value, error: false });
-    };
-
-    const clickSubmit = e => {
-        e.preventDefault();
-        setValues({ ...values, loading: true })
-
-        update(user._id, token, { name, email, password, country }).then(data => {
-            if (data.error) {
-                console.log(data.error)
-                setValues({ ...values, errorModal: true, error: data.error, loading: false, success: false });
-            } else {
-                updateUser(data, () => {
-                    setValues({
-                        ...values,
-                        name: data.name,
-                        email: data.email,
-                        // company: data.company,
-                        country: data.country,
-                        loading: false,
-                        success: 'Profile updated successfully.',
-                        successModal: true
-                    });
-                });
-            }
-        });
-    };
-
-    const showLoader = () => ( loading && <Loader /> )
-
     const profileHtml = () => {
+        if(!user) {
+            return <Redirect to="/signin" />;
+        }
+
+        const { name, email, country } = user
         return (
             <div className="col-sm-9">
                 <div className="card">
@@ -65,86 +16,47 @@ const Profile = ({ user, token }) => {
                         <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
                             <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
                                 <li className="nav-item active">
-                                    <span className="nav-link" to="/product"><strong>Update Profile</strong></span>
+                                    <span className="nav-link" to="/order"><strong>Profile</strong></span>
                                 </li>
                             </ul>
                         </div>
                     </nav>
-                    <div className="card-body">
-                        <form>
-                            { showLoader() }
+                    <ul className="list-group">
+                        <li className="list-group-item">
+                            <div className="row">
+                                <div className="col-sm-2"><b>Name</b>:</div>
+                                <div className="col-sm-6">{name}</div>
+                            </div>
+                        </li>
+                        <li className="list-group-item">
+                            <div className="row">
+                                <div className="col-sm-2"><b>Email</b>:</div>
+                                <div className="col-sm-6">{email}</div>
+                            </div>
+                        </li>
 
-                            <div className="form-row">
-                                <div className="form-group col-md-6">
-                                    <label htmlFor="inputEmail4">Name</label>
-                                    <input type="text" onChange={handleChange('name')} className="form-control" value={name} />
-                                </div>
-                                <div className="form-group col-md-6"></div>
+                        <li className="list-group-item">
+                            <div className="row">
+                                <div className="col-sm-2"><b>Country</b>:</div>
+                                <div className="col-sm-6">{country}</div>
                             </div>
-                            <div className="form-row">
-                                <div className="form-group col-md-6">
-                                    <label htmlFor="inputEmail4">Email</label>
-                                    <input type="email" onChange={handleChange('email')} className="form-control" value={email} readOnly />
+                        </li>
+                        <li className="list-group-item">
+                            <div className="row">
+                                <div className="col-sm-2">
+                                    <Link to={`/profile/${user._id}`} type="button" className="btn btn-sm btn-outline-primary">Update</Link>
                                 </div>
-                                <div className="form-group col-md-6"></div>
                             </div>
-                            
-                            <div className="form-row">
-                                <div className="form-group col-md-6">
-                                    <label htmlFor="inputPassword4">Password</label>
-                                    <input type="password" onChange={handleChange('password')} className="form-control" value={password} />
-                                </div>
-                                <div className="form-group col-md-6"></div>
-                            </div>
-
-                            <div className="form-row">
-                                <div className="form-group col-md-6">
-                                    <label htmlFor="inputAddress">Country</label>
-                                    <select value={country} onChange={handleChange('country')} className="form-control">
-                                    <option>Select Country</option>
-                                    {Object.values(CountryList).map((c) => (
-                                        <option key={c} value={c}>
-                                            {c}
-                                        </option>
-                                    ))}
-                                </select>
-                                </div>
-                                <div className="form-group col-md-6"></div>
-                            </div>
-                            <button onClick={clickSubmit} type="submit" className="btn btn-primary">Update Profile</button>
-                        </form>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        )
-    }
-
-    const onClose = () => {
-        setValues({errorModal: false, error: ''});
+        );
     }
 
     return (
         <Layout>
-            <Fragment>
             {profileHtml()}
-                { values.successModal && 
-                    <SuccessModal
-                        title="Success"
-                        content= { values.success }
-                        redirectUrl= {`/`}
-                        isDisplay={values.successModal}
-                    />
-                }
-
-                { values.errorModal && 
-                    <ErrorModal
-                        title="Error"
-                        content= { values.error }
-                        isDisplay={values.errorModal}
-                        onSubmit={onClose}
-                    />
-                }
-            </Fragment>            
         </Layout>
     )
 };

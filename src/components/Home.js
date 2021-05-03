@@ -1,11 +1,15 @@
-import React from 'react';
-import Layout from './layout/Layout';
+import React, { Fragment } from 'react';
+import Menu from './layout/partial/Menu';
+
 
 const Home = () => {
     return (
-        <Layout>
-            <div>You are on the Homepage.</div>
-        </Layout>
+        <Fragment>
+            <Menu />
+            <div className="home-page">
+                <h1>You are on Home page.</h1>
+            </div>
+        </Fragment>
     )
 };
 
