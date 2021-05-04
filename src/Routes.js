@@ -73,7 +73,7 @@ const Routes = () => {
                 <AdminRoute path="/admin/category" exact component={Category} />
                 <AdminRoute path="/admin/category/new" exact component={AddCategory} />
                 <AdminRoute path="/admin/category/update/:categoryId" exact component={UpdateCategory} />
-                
+
                 <PrivateRoute path="/chat" exact component={Chat} />
                 <PrivateRoute path="/chat/:userId" exact component={Chat} />
             </Switch>

@@ -1,12 +1,12 @@
-import React, { Component, Fragment } from 'react';
-import { isAuthenticated } from "../auth/api";
+import React, { Component } from 'react';
+// import { isAuthenticated } from "../auth/api";
 import UserList from './UserList';
 import Search from './Search';
 import ChatForm from './ChatForm';
-import { getUsers, getChats } from './apiChat';
+import { getUsers, getChatUsers, getChats } from './apiChat';
 import io from 'socket.io-client';
 import MessageList from './MessageList';
-import Sidebar from '../layout/partial/Sidebar';
+// import Sidebar from '../layout/partial/Sidebar';
 
  import './chat.css';
 import Layout from '../layout/Layout';
@@ -16,7 +16,7 @@ class Chat extends Component {
     socket = io(process.env.REACT_APP_API_URL, {transports: ['websocket', 'polling', 'flashsocket']});
 
     componentDidMount() {
-        const { token, user } = isAuthenticated();
+        const { token, user } = this.props
 
         this.setState({token}, () => {
             if(this.props.match.params.userId) {
@@ -31,19 +31,29 @@ class Chat extends Component {
             this.socket.emit('join', { _id: user._id });
 
             this.setState({loading: true})
-            getUsers(token).then( users => {
-                this.setState({users, loading: false})
-            }).catch(error => {
-                console.log('Error in fetching chat users')
-            })
+            this.setChatUser()
         });
         
         // this.setState({isMounted: true})
     }
 
+    setChatUser = () => {
+        const { token, user } = this.props
+        getChatUsers(user._id, token).then( users => {
+            this.setState({users: users.chatUsers, loading: false})
+        }).catch(error => {
+            console.log('Error in fetching chat users')
+        })
+    }
+
     searchUser = (searchTerm) => {
+        if(searchTerm.trim() === '') {
+            this.setChatUser()
+            return false
+        }
+
         getUsers(this.state.token, searchTerm).then( users => {
-            this.setState({users})
+            this.setState({users: users})
         }).catch(error => {
             console.log('Error in fetching chat users')
         })
@@ -52,10 +62,14 @@ class Chat extends Component {
     componentDidUpdate(props, state) {
         const { userId } = this.props.match.params 
         if(userId === undefined && userId !== props.match.params.userId) {
-            this.setState({ selectedUserId: undefined })
+            // this.setState({ selectedUserId: undefined })
+            this.setChatUser()
             console.log('aaaaa')
         } else if(userId !== undefined && userId !== props.match.params.userId) {
             console.log('bbbbb')
+            this.setState({ selectedUserId: userId});
+        } else if(userId && state.users !== this.state.users) {
+            console.log('cccc')
             this.setState({ selectedUserId: userId});
         }
         
@@ -82,7 +96,9 @@ class Chat extends Component {
                 return console.log(error)
             }
 
-            this.setState({ messages })
+            this.setState({ messages }, () => {
+                this.setChatUser()
+            })
         })
     }
 
@@ -122,22 +138,6 @@ class Chat extends Component {
     }
 
     render() {
-        // return (
-        //     <Layout className="chat-wrapper">
-        //         <div id="chat-container">
-        //             <Search searchUser={this.searchUser} />
-        //             <UserList 
-        //                 selectedUserId={this.state.selectedUserId}
-        //                 users={this.state.users} 
-        //                 userSelect={this.onUserSelect}
-        //                 loading={this.state.loading}
-        //             />
-        //             { this.renderMessageList() }
-        //             { this.renderChatForm()  } 
-        //         </div>
-        //     </Layout>
-        // );
-
         return (
             <Layout>
                 <div className="col-sm-9">

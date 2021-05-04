@@ -21,7 +21,9 @@ class UserList extends Component {
 
         let selectedClass = '';
         return users.map( (user, index) => {
-            selectedClass = user._id === this.props.selectedUserId ? 'active' : '';
+            let userId = user?.userId ? user.userId : user._id
+            // selectedClass = user._id === this.props.selectedUserId ? 'active' : '';
+            selectedClass = userId === this.props.selectedUserId ? 'active' : '';
 
             return <User 
                     key={ index } 
