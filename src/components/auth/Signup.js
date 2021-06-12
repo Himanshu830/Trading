@@ -73,6 +73,7 @@ class Signup  extends Component {
         const { name, email, password, country } = this.state;
         signup({ name, email, password, country }).then(data => {
             if (data.error) {
+                console.log(data.error)
                 this.setState({ errorModal: true, error: data.error, loading:false, success: false });
                 console.log('Error occurred.')
             } else {
