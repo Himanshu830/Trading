@@ -7,7 +7,7 @@ const isActive = (history, path) => {
         return 'active';
     } else {
         return '';
-    }
+    }  
 };
 
 const Sidebar = ({ history }) => {

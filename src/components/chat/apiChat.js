@@ -3,7 +3,7 @@ import { API } from "../../config";
 export const saveChat = (token, chat) => {
     return fetch(`${API}/chat`, {
         method: 'POST',
-        headers: {
+        headers: {  
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`

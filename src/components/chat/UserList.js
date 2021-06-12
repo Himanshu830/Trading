@@ -10,7 +10,7 @@ class UserList extends Component {
     renderUserList = () => {
         const {users, loading} = this.props;
 
-        if(loading) {
+        if(loading) {  
             return 'Loading...'
         } else if(!users.length) {
             return (

@@ -8,7 +8,7 @@ const Emoji = (props) => {
     const handleChange = e => {
         setText({ text: e.target.value })
     }
-
+  
     const addEmoji = e => {
         let emoji = e.native;
         setText({

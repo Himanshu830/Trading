@@ -11,7 +11,7 @@ const VideoMessage = ({ message, messageClass }) => {
                 <video 
                     style={{maxWidth:'200px'}}
                     src={`${API}${videoName}`} 
-                    alt="video" 
+                    alt="video"   
                     type="video/mp4" controls />
                 <div className="message-time">{ moment(message.createdAt).format('LT') }</div>
             </div>

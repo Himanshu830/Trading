@@ -6,7 +6,7 @@ import { arrayBufferToBase64 } from '../../utility/image';
 import ErrorModal from '../modal/ErrorModal';
 import SuccessModal from '../modal/SuccessModal';
 
-class Company extends Component {
+class Company extends Component {  
     state = {
         name: '',
         companyType: '',

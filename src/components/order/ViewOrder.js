@@ -13,7 +13,7 @@ import Modal from '../modal/Modal';
 
 class ViewOrder extends Component {
     state = {
-        title: '',
+        title: '',  
         type: '',
         categoryName: '',
         subCategoryName: '',

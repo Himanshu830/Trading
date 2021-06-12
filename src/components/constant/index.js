@@ -8,7 +8,7 @@ export const CountryList = {
    'Anguilla': 'Anguilla',
    'Antigua & Barbuda': 'Antigua & Barbuda',
    'Argentina': 'Argentina',
-   'Armenia': 'Armenia',
+   'Armenia': 'Armenia',  
    'Aruba': 'Aruba',
    'Australia': 'Australia',
    'Austria': 'Austria',

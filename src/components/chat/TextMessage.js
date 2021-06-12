@@ -11,7 +11,7 @@ const TextMessage = ({ message, messageClass }) => {
                         componentDecorator={(decoratedHref, decoratedText, key) => (
                             <a target="blank" href={decoratedHref} key={key}>
                                 {decoratedText}
-                            </a>
+                            </a>  
                         )}
                     >{message.message}</Linkify>
 

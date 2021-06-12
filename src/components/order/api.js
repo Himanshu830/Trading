@@ -8,7 +8,7 @@ export const getCategories = (token, parent = null) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         }
-    })
+    })  
         .then(response => {
             return response.json();
         })

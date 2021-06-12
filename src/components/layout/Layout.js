@@ -7,7 +7,7 @@ import { isAuthenticated } from '../auth/api';
 const Layout = ( props ) => {
     const logedInHtml = () => (
         <div className="container-fluid" style={{marginTop: '15px'}}>
-            <div className="row">
+            <div className="row">  
                 <Sidebar  />
                 { props.children }
             </div>

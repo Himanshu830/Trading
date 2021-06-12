@@ -4,7 +4,7 @@ import './modal.css';
 
 const Popup = ({ title, content, onSubmit, onCancel }) => {
 
-    const modalHtml = () => (
+    const modalHtml = () => (  
         <div className="modal" id="exampleModalLong" role="dialog"
             aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div className="modal-dialog modal-lg" role="document">

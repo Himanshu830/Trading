@@ -91,7 +91,7 @@ class Signup  extends Component {
                     successModal: true
                 });                
             }
-        });
+        });  
     };
 
     showLoader = () => ( this.state.loading && <Loader /> )

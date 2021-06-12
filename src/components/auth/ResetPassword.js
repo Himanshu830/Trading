@@ -9,7 +9,7 @@ import './auth.css';
 
 const ResetPassword = ({match}) => {
     const [values, setValues] = useState({
-        password: '',
+        password: '',  
         confirmPassword: '',
         loading: false,
         error: '',

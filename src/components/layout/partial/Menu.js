@@ -7,7 +7,7 @@ const isActive = (history, path) => {
         return { color: "#ff9900" };
     } else {
         return { color: "#ffffff" };
-    }
+    }  
 };
 
 const Menu = ({ history }) => {

@@ -7,7 +7,7 @@ import SuccessModal from '../../modal/SuccessModal';
 import ErrorModal from '../../modal/ErrorModal';
 
 class AddCategory extends Component {
-    state = {
+    state = {  
         name: '',
         parent: '',
         categories: [],

@@ -9,7 +9,7 @@ import ErrorModal from '../../modal/ErrorModal';
 class UpdateCategory extends Component {
     state = {
         name: '',
-        parent: '',
+        parent: '',  
         categories: [],
         loading: false,
         error: false,

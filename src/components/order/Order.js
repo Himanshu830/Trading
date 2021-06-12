@@ -8,7 +8,7 @@ import { Loader } from '../loader/loader';
 import Modal from '../modal/Modal';
 
 class Order extends Component {
-    state = {
+    state = {  
         order: [],
         id: '',
         orderTitle: '',

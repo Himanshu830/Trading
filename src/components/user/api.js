@@ -10,7 +10,7 @@ export const read = (userId, token) => {
         }
     })
         .then(response => {
-            return response.json();
+            return response.json();  
         })
         .catch(err => console.log(err));
 };

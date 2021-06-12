@@ -12,7 +12,7 @@ class EmailVerification extends Component {
         success: false,
         errorModal: false,
         successModal: false
-    }
+    }  
 
     componentDidMount() {
         const { email, token } = this.props.match.params;

@@ -8,7 +8,7 @@ const ImageMessage = ({ message, messageClass }) => {
         <div className={`message-row ${messageClass}`}>
             <div className="message-content">
                 {/* <div className="message-text">{ message.message }</div> */}
-                <img
+                <img  
                     style={{maxWidth:'200px'}}
                     src={`${API}${imageName}`} 
                     alt={message.message} />

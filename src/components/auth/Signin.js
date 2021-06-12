@@ -11,7 +11,7 @@ class Signin extends Component {
     state = {
         email: '',
         password: '',
-        error: '',
+        error: '',  
         errorModal: false,
         successModal: false,
         rememberMe: false,

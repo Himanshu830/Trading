@@ -9,7 +9,7 @@ class User extends Component {
         this.props.onUserSelect(user)
     }
 
-    render() {
+    render() {  
         const { user, selectedClass } = this.props
 
         // return (

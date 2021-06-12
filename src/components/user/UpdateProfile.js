@@ -9,7 +9,7 @@ import SuccessModal from '../modal/SuccessModal';
 const UpdateProfile = ({ user, token }) => {
 
     const [values, setValues] = useState({
-        name: '',
+        name: '',  
         email: '',
         password: '',
         country: '',

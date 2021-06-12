@@ -9,7 +9,7 @@ const Profile = ({ user, token }) => {
         }
 
         const { name, email, country } = user
-        return (
+        return (  
             <div className="col-sm-9">
                 <div className="card">
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">

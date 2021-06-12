@@ -13,7 +13,7 @@ class UpdateOrder extends Component {
     state = {
         title: '',
         type: '',
-        details: '',
+        details: '',  
         categories: [],
         subCategories: [],
         categoryId: '',

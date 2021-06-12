@@ -10,7 +10,7 @@ const Dashboard = ({ user, token }) => {
     useEffect(() => {
         getCompany(token).then(result => {
             setCompanyName(result.name)
-        });
+        });  
     });
 
     const { name, email, country, role } = user;

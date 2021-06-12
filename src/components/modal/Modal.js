@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './modal.css';
 
 const Modal = ({ title, content, onSubmit, onCancel }) => {
-
+  
     const modalHtml = () => (
         <div className="modal" id="exampleModalLong" role="dialog"
             aria-labelledby="exampleModalLongTitle" aria-hidden="true">

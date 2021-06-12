@@ -11,7 +11,7 @@ const AdminDashboard = ({ user, token }) => {
         getCompany(token).then(result => {
             setCompanyName(result.name)
         });
-    });
+    });  
 
     const { name, email, country, role } = user;
     

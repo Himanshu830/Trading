@@ -8,7 +8,7 @@ import { getUsers, getChats } from './apiChat';
 import io from 'socket.io-client';
 import MessageList from './MessageList';
 
-import './chat.css';
+import './chat.css';  
 
 class ChatUser extends Component {
     // state = { token: '', profile: {}, users: [], selectedUser: {}, messages: []}

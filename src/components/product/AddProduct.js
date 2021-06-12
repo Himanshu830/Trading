@@ -7,7 +7,7 @@ import SuccessModal from '../modal/SuccessModal';
 import ErrorModal from '../modal/ErrorModal';
 
 class AddProduct extends Component {
-    state = {
+    state = {  
         name: '',
         description: '',
         unitPrice: '',

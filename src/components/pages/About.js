@@ -3,7 +3,7 @@ import Menu from '../layout/partial/Menu';
 
 const About = () => {
 
-    const aboutHtml = () => (
+    const aboutHtml = () => (  
         <div className="container-fluid text-center bg-grey">
             <h2>Portfolio</h2><br />
             <h4>What we have created</h4>

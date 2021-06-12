@@ -10,7 +10,7 @@ const Search = ({ searchUser }) => {
                 onChange={(e) => searchUser(e.target.value)}
             />
         </div>
-    );
+    );  
 
 };
 

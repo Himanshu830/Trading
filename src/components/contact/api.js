@@ -10,6 +10,6 @@ export const contactUs = message => {
         body: JSON.stringify(message)
     })
         .then(response => {
-            return response.json();
+            return response.json();  
         })
 };

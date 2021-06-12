@@ -9,7 +9,7 @@ const isActive = (history, path) => {
         return { color: "#ffffff" };
     }
 };
-
+  
 const Menu = ({ history }) => (
     <div className="menu" style={{ background: "linear-gradient(to right, #0048AA 0%, #57c1eb 100%)" }}>
         <ul className="nav nav-tabs">

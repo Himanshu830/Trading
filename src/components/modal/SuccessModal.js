@@ -8,7 +8,7 @@ const SuccessModal = ({ isDisplay, title, content, redirectUrl }) => {
     const [show, setShow] = useState(isDisplay)
 
     useEffect(() => {
-        setShow(isDisplay)
+        setShow(isDisplay)  
     }, [isDisplay])
 
     const onClose = () => {

@@ -10,7 +10,7 @@ const AdminRoute = ({ component: Component, ...rest }) => {
             render={props =>
                 user && user.role === 1 ? (
                     <Component {...props} user={user} token={token} />
-                ) : (
+                ) : (  
                     <Redirect
                         to={{
                             pathname: "/signin",

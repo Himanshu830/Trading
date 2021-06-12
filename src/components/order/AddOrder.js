@@ -6,7 +6,7 @@ import { Loader } from '../loader/loader';
 import { CountryList, ORDER_TYPE } from '../constant';
 import SuccessModal from '../modal/SuccessModal';
 import ErrorModal from '../modal/ErrorModal';
-
+  
 class AddOrder extends Component {
     state = {
         title: '',

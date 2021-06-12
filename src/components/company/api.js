@@ -3,7 +3,7 @@ import { API } from "../../config";
 export const getCompany = (token) => {
     return fetch(`${API}/company`, {
         method: "GET",
-        headers: {
+        headers: {  
             Accept: "application/json",
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`

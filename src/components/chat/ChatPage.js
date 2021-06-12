@@ -10,7 +10,7 @@ import MessageList from "./MessageList";
 import ChatForm from './ChatForm';
 
 import './chat.css';
-
+  
 const Chat = () => {
 
     const chatHtml = () => {

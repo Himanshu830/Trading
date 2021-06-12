@@ -11,7 +11,7 @@ class UpdateProduct extends Component {
     state = {
         name: '',
         description: '',
-        unitPrice: '',
+        unitPrice: '',  
         categories: [],
         subCategories: [],
         categoryId: '',

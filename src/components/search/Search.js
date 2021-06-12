@@ -7,7 +7,7 @@ const Search = ({onSearch}) => {
         e.preventDefault();
         onSearch(term);
         setTerm('');
-    }
+    }  
 
     const searchHtml = () => (
         <form className="form-inline my-2 my-lg-0">

@@ -8,7 +8,7 @@ import ErrorModal from '../modal/ErrorModal';
 
 import './auth.css';
 
-const ForgotPassword = () => {
+const ForgotPassword = () => {  
     const [values, setValues] = useState({
         email: '',
         loading: false,

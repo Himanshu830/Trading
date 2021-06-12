@@ -5,7 +5,7 @@ import { Loader } from '../loader/loader';
 import SuccessModal from '../modal/SuccessModal';
 import ErrorModal from '../modal/ErrorModal';
 
-import './auth.css';
+import './auth.css';  
 
 class AccountActivation extends Component {
     state = {

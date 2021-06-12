@@ -6,7 +6,7 @@ import { SITE_URL } from '../../config'
 
 class MessageList extends Component {
     // state = {messages: []}
-
+  
     // componentDidMount() {
     //     const { chatMessage, from } = this.props
     //     chatMessage(from);

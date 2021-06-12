@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 import MessageList from './MessageList';
 // import Sidebar from '../layout/partial/Sidebar';
 
- import './chat.css';
+ import './chat.css';  
 import Layout from '../layout/Layout';
 
 class Chat extends Component {

@@ -11,7 +11,7 @@ import { Loader } from '../loader/loader';
 class Contact extends Component {
     state = {
         company: '',
-        subject: '',
+        subject: '',  
         message: '',
         userId: '',
         loading: false,

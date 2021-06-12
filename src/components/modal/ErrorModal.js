@@ -7,7 +7,7 @@ const ErrorModal = ({ isDisplay, title, content, onSubmit }) => {
     const [show, setShow] = useState(isDisplay)
 
     useEffect(() => {
-        setShow(isDisplay)
+        setShow(isDisplay)  
     }, [isDisplay])
 
     const onClose = () => {

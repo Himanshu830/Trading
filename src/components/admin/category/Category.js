@@ -9,7 +9,7 @@ import SuccessModal from '../../modal/SuccessModal';
 import ErrorModal from '../../modal/ErrorModal';
 
 class Category extends Component {
-    state = {
+    state = {  
         categories: [],
         id: '',
         categoryName: '',

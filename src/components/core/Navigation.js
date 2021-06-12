@@ -10,7 +10,7 @@ const Navigation = ({ userId, history }) => (
                         <Link className="nav-link" to={`/profile`}>
                             Profile
                         </Link>
-                    </li>
+                    </li>  
                     <li className="list-group-item">
                         <Link className="nav-link" to={`/company`}>
                             Company

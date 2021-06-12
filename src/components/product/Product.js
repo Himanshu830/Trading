@@ -9,7 +9,7 @@ import { arrayBufferToBase64 } from '../../utility/image';
 
 class Product extends Component {
     state = {
-        id: '',
+        id: '',  
         product: [],
         productName: '',
         loading: false,

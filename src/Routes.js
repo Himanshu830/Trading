@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './components/routes/privateRoute';
-import AdminRoute from './components/routes/adminRoute';
+import AdminRoute from './components/routes/adminRoute';  
 
 import Signin from './components/auth/Signin';
 import Signup from './components/auth/Signup';

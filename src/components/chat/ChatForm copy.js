@@ -9,7 +9,7 @@ const ChatForm = ({ token, from, to, onSendMessage }) => {
     const [message, setMessage] = useState('');
 
     const buildMessage = (message) => {
-        return {
+        return {  
             message,
             from,
             to,

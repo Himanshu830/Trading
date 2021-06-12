@@ -10,7 +10,7 @@ const ChatForm = ({ token, from, to, onSendMessage }) => {
     const buildMessage = (message) => {
         return {
             message,
-            from,
+            from,  
             to,
             type: 'text'
         }
